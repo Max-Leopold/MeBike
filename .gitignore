@@ -53,6 +53,16 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+
+#Atmel Studio specific
+
+Debug/
+*.componentinfo.xml
+*.vs*
+*.atsuo
+.vs/MeBike/v14/.atsuo
+
+
 # IntelliJ Idea
 *.iml
 /.idea
