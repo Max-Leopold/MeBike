@@ -45,8 +45,17 @@
 # Kernel Module Compile Results
 *.mod*
 *.cmd
+
+# Atmel Studio
 .tmp_versions/
 modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# IntelliJ Idea
+*.iml
+/.idea
+
+# Maven
+/target
