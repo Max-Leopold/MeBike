@@ -6,6 +6,7 @@ public class TourSummary {
 
     private float distance;
     private float pulseMedium;
+    private int time;
 
 
     public long getTourId() {
@@ -30,5 +31,13 @@ public class TourSummary {
 
     public void setPulseMedium(float pulseMedium) {
         this.pulseMedium = pulseMedium;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 }
