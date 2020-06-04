@@ -9,8 +9,9 @@ public class FlattenedTourEntry {
     private float temperature;
     private float latitude;
     private float longitude;
+    private long timestamp;
 
-    public FlattenedTourEntry(long tourId, float pitch, float pulse, float speed, float temperature, float latitude, float longitude) {
+    public FlattenedTourEntry(long tourId, float pitch, float pulse, float speed, float temperature, float latitude, float longitude, long timestamp) {
         this.tourId = tourId;
         this.pitch = pitch;
         this.pulse = pulse;
@@ -18,6 +19,7 @@ public class FlattenedTourEntry {
         this.temperature = temperature;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.timestamp = timestamp;
     }
 
     public long getTourId() {
@@ -74,5 +76,13 @@ public class FlattenedTourEntry {
 
     public void setLongitude(float longitude) {
         this.longitude = longitude;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

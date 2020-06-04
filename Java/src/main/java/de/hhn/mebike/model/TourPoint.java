@@ -26,6 +26,8 @@ public class TourPoint implements Serializable {
 
     private float temperature;
 
+    private long timestamp;
+
     public TourPoint() {
     }
 
@@ -75,5 +77,13 @@ public class TourPoint implements Serializable {
 
     public void setTemperature(float temperature) {
         this.temperature = temperature;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

@@ -27,7 +27,8 @@ public class TourSummaryService {
                     "       tp.speed                      as speed,\n" +
                     "       tp.temperature                as temperature,\n" +
                     "       tp.gps_point_latitude_degree  as latitude,\n" +
-                    "       tp.gps_point_longitude_degree as longitude\n" +
+                    "       tp.gps_point_longitude_degree as longitude,\n" +
+                    "       tp.timestamp                  as time\n" +
                     "FROM tour as t,\n" +
                     "     tour_tour_points as ttp,\n" +
                     "     tour_point as tp,\n" +
@@ -51,6 +52,7 @@ public class TourSummaryService {
     private static final String TEMPERATURE = "temperature";
     private static final String LATITUDE = "latitude";
     private static final String LONGITUDE = "longitude";
+    private static final String TIMESTAMP = "time";
 
     private final NamedParameterJdbcTemplate npjt;
 
@@ -102,6 +104,7 @@ public class TourSummaryService {
                     FlattenedTourEntry flattenedTourEntry = flattenedTourEntries2d.get(i).get(j);
 
                     tourSummary.setDistance(0);
+                    tourSummary.setTime(0);
                     tourSummary.setPulseMedium(flattenedTourEntry.getPulse());
                     tourSummary.setTourId(flattenedTourEntry.getTourId());
                 } else {
@@ -117,6 +120,7 @@ public class TourSummaryService {
                                             lastTourEntry.getLatitude(),
                                             lastTourEntry.getLongitude()
                                     ));
+                    tourSummary.setTime((int) (tourSummary.getTime() + (flattenedTourEntry.getTimestamp() - lastTourEntry.getTimestamp())));
                 }
             }
 
@@ -137,8 +141,8 @@ public class TourSummaryService {
                     resultSet.getFloat(SPEED),
                     resultSet.getFloat(TEMPERATURE),
                     resultSet.getFloat(LATITUDE),
-                    resultSet.getFloat(LONGITUDE)
-            );
+                    resultSet.getFloat(LONGITUDE),
+                    resultSet.getLong(TIMESTAMP));
         }
     }
 
