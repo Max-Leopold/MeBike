@@ -2,10 +2,13 @@ package de.hhn.mebike.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.springframework.lang.NonNull;
 
 @Entity
 public class Client {
@@ -13,6 +16,10 @@ public class Client {
     @Id
     @GeneratedValue
     private long clientId;
+
+    @NonNull
+    @Column(unique = true)
+    private String name;
 
     @OneToMany
     private List<Tour> tours;
