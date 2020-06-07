@@ -11,7 +11,7 @@ void serial_init() {
     UBRR0H = UBRRH_VALUE;
     UBRR0L = UBRRL_VALUE;
 
-    UCSR0C = 0x06;       /* Set frame format: 8data, 1stop bit  */
+    UCSR0C = 0x06;       /* Set frame format: 8 bit data, 1 stop bit  */
     UCSR0B = (1 << TXEN0); /* Enable  transmitter                 */
 }
 
