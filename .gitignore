@@ -45,14 +45,25 @@
 # Kernel Module Compile Results
 *.mod*
 *.cmd
+
+# Atmel Studio
 .tmp_versions/
 modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
 
+
 #Atmel Studio specific
 *.atsln
 *.cproj
 Debug/
 *.componentinfo.xml
+
+# IntelliJ Idea
+*.iml
+/.idea
+
+# Maven
+/target
+
