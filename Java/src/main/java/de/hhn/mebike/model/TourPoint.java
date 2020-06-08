@@ -2,6 +2,7 @@ package de.hhn.mebike.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +17,7 @@ public class TourPoint implements Serializable {
 
     private float pulse;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private GPSPoint gpsPoint;
 
     private float pitch;
@@ -24,6 +25,8 @@ public class TourPoint implements Serializable {
     private float speed;
 
     private float temperature;
+
+    private long timestamp;
 
     public TourPoint() {
     }
@@ -74,5 +77,13 @@ public class TourPoint implements Serializable {
 
     public void setTemperature(float temperature) {
         this.temperature = temperature;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }
