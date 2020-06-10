@@ -25,7 +25,7 @@ void bluetooth_init(){
 /************************************************************************/
 void bluetooth_send_gps(struct gps_coordinates coords){
 	char data[100];
-	strcat(data, "<BOM>");
+	strcpy(data, "<BOM>");
 	strcat(data, "gps");
 	strcat(data, DATA_DELIMITER);
 	strcat(data, coords.gmt_time);

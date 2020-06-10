@@ -23,7 +23,13 @@ int main() {
     gps_init();
 
     while (1) {
-        gps_main();
+        //gps_main();
+		struct gps_coordinates gps;
+		gps.gmt_time = "12";
+		gps.latitude = "345";
+		gps.longitude = "678";
+		bluetooth_send_gps(gps);
+		_delay_ms(1000);
     }
 }
 
