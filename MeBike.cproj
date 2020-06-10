@@ -120,22 +120,34 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="bno055.c">
+    <Compile Include="bluetooth\bluetooth.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="bno055.h">
+    <Compile Include="bluetooth\bluetooth.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="bno055_support.c">
+    <Compile Include="gps\gps_main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gps\gps_main.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="serial.c">
+    <Compile Include="main.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="serial.h">
+    <Compile Include="uart\serial.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="uart\serial.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="uart\softuart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="uart\softuart.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
@@ -143,6 +155,11 @@
     <None Include="README.md">
       <SubType>compile</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bluetooth\" />
+    <Folder Include="gps\" />
+    <Folder Include="uart\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
