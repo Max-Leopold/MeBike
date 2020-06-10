@@ -17,24 +17,25 @@
  {
 	 int ADCval;
 
-	 ADMUX = adc_channel;         // use #1 ADC
-	 ADMUX |= (1 << REFS0);    // use AVcc as the reference
+	 ADMUX = adc_channel;      // verwende den gegebenen ADC_Channel z.B. 0 = ADC0 also PIN A0
+	
+	 ADMUX |= (1 << REFS0);    // verwende AVcc als Referenzspannung
+	 
 	 ADMUX &= ~(1 << ADLAR);   // clear for 10 bit resolution
 	 
-	 ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // 128 prescale for 8Mhz
-	 ADCSRA |= (1 << ADEN);    // Enable the ADC
+	 ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // 128 als Prescaler(Frequenzvorteiler) verwenden, da 16 MHz / 200kHz = 80 - nächst höherer Wert ist 128 (siehe Tabelle) 
+	
+	 ADCSRA |= (1 << ADEN);    // ADC aktivieren
 
-	 ADCSRA |= (1 << ADSC);    // Start the ADC conversion
+	 ADCSRA |= (1 << ADSC);    // Eine ADC-Konvertierung
 
-	 while(ADCSRA & (1 << ADSC));      // Thanks T, this line waits for the ADC to finish
-
+	 while(ADCSRA & (1 << ADSC));      // auf Abschluss der Konvertierung warten
 
 	 ADCval = ADCL;
 	 ADCval = (ADCH << 8) + ADCval;    // ADCH is read so ADC can be updated again
 
-	 return ADCval;
+	 return ADCval;				
  }
-
 
  
  bool heartbeatDetected(int delay)
@@ -45,16 +46,16 @@
 	 
 	 bool result = false;
 	 
-	 // Hier wird der aktuelle Spannungswert am Fototransistor ausgelesen und in der rawValue-Variable zwischengespeichert
+	 // Hier wird der aktuelle Spannungswert am Fototransistor ausgelesen und in der ADCvalue-Variable zwischengespeichert
 	 int ADCvalue = ADCsingleREAD(0);
 	 ADCvalue *= (1000/delay);
 	 
-	 // Sollte der aktuelle Wert vom letzten maximalen Wert zu weit abweichen
-	 // (z.B. da der Finger neu aufgesetzt oder weggenommen wurde)
-	 // So wird der MaxValue resetiert, um eine neue Basis zu erhalten.
+	 /* Sollte der aktuelle ADC-Wert vom letzten maximalen Wert zu weit abweichen
+	  (z.B. da der Finger neu aufgesetzt oder weggenommen wurde) */
+
 	 if (ADCvalue * 4L < maxValue) {    maxValue = ADCvalue * 0.8;  }     // Detect new peak
 	 if (ADCvalue > maxValue - (1000/delay)) {
-		 // Hier wird der eigentliche Peak detektiert. Sollte ein neuer RawValue groeßer sein
+		 // Hier wird der eigentliche Peak detektiert. Sollte ein neuer ADCValue groeßer sein
 		 // als der letzte maximale Wert, so wird das als Spitze der aufgezeichnten Daten erkannt.
 		 if (ADCvalue > maxValue) {
 			 maxValue = ADCvalue;

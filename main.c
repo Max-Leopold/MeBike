@@ -1,8 +1,8 @@
 /*
  * Me-Bike.c
  *
- * Created: 03.06.2020 17:15:55
- * Author : nicok
+ *
+ * Author : Frederic Henn
  */ 
 
 #define F_CPU 16000000UL
@@ -30,10 +30,12 @@ int main(void)
 	{
 		 if(heartbeatDetected(delayMsec))
 		 {
-			heartRateBPM = 60000 / beatMsec;
+			 heartRateBPM = 60000 / beatMsec;
 
+			//Konvertierung von int zu char...
 			char buffer[16];
 			sprintf(buffer, "%d", heartRateBPM);
+			//Ausgabe des Puls...
 			serial_print("Puls: ");
 			serial_print_line(buffer);
 			beatMsec = 0;
