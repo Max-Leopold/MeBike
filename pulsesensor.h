@@ -11,9 +11,14 @@
 		char *pulse;
 	};
 
-	int ADCsingleREAD(uint8_t);
+	void ADC_init();
 
-	bool heartbeatDetected(int);
+	bool heartbeatDetected(int,int);
 
+	int getBpm();
+
+	void addValue(int);
+
+	void clearBpm();
 	
 #endif /* PULSESENSOR_H_ */

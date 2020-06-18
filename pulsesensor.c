@@ -10,35 +10,44 @@
  #include <util/delay.h>
  #include <stdint.h>
  #include <stdbool.h>
-
-
-
- int ADCsingleREAD(uint8_t adc_channel)
- {
-	 int ADCval;
-
-	 ADMUX = adc_channel;      // verwende den gegebenen ADC_Channel z.B. 0 = ADC0 also PIN A0
-	
-	 ADMUX |= (1 << REFS0);    // verwende AVcc als Referenzspannung
-	 
-	 ADMUX &= ~(1 << ADLAR);   // clear for 10 bit resolution
-	 
-	 ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // 128 als Prescaler(Frequenzvorteiler) verwenden, da 16 MHz / 200kHz = 80 - nächst höherer Wert ist 128 (siehe Tabelle) 
-	
-	 ADCSRA |= (1 << ADEN);    // ADC aktivieren
-
-	 ADCSRA |= (1 << ADSC);    // Eine ADC-Konvertierung
-
-	 while(ADCSRA & (1 << ADSC));      // auf Abschluss der Konvertierung warten
-
-	 ADCval = ADCL;
-	 ADCval = (ADCH << 8) + ADCval;    // ADCH is read so ADC can be updated again
-
-	 return ADCval;				
- }
+ #include <avr/interrupt.h>
 
  
- bool heartbeatDetected(int delay)
+ int adc_last_value;
+
+ int bpmValues[3];
+
+ int average = 0;
+
+ int summe = 0;
+
+ int arrayLength = 0;
+
+
+ void ADC_init() {
+	 ADMUX = 0;         // use #0 ADC
+	 ADMUX |= (1 << REFS0);    // use AVcc as the reference
+	 ADMUX &= ~(1 << ADLAR);   // clear for 10 bit resolution
+
+	 ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // 128 prescale for 8Mhz
+	 ADCSRA |= (1 << ADATE);   // Set ADC Auto Trigger Enable
+	 ADCSRB = 0;               // 0 for free running mode
+	 ADCSRA |= (1 << ADEN);    // Enable the ADC
+	 ADCSRA |= (1 << ADIE);    // Enable Interrupts
+	 ADCSRA |= (1 << ADSC);    // Start the ADC conversion
+
+
+	 // Enable timer 2 to count the millis
+	 // Set the Timer Mode to CTC
+	 TCCR2A |= (1 << WGM21);
+	 // Count every milli second ((16*10^6 / 256) * 0,001) -1
+	 OCR2A = 61;
+	 TIMSK2 |= (1 << OCIE2A);    //Set the ISR COMPA vect
+	 TCCR2B |= (1 << CS22) | (1 << CS21); // set prescaler to 256 and start the timer
+
+ }
+ 
+bool heartbeatDetected(int delay, int ADCvalue)
  {
 	 static int maxValue = 0;
 	 static bool isPeak = false;
@@ -47,7 +56,6 @@
 	 bool result = false;
 	 
 	 // Hier wird der aktuelle Spannungswert am Fototransistor ausgelesen und in der ADCvalue-Variable zwischengespeichert
-	 int ADCvalue = ADCsingleREAD(0);
 	 ADCvalue *= (1000/delay);
 	 
 	 /* Sollte der aktuelle ADC-Wert vom letzten maximalen Wert zu weit abweichen
@@ -79,7 +87,47 @@
  }
 
 
+ int getBpm() 
+ {
+	return average;
+ }
 
+ void addValue(int bpm) 
+ {
+	//for normalizing purpose
+	if (bpm < 40 || bpm > 200) 
+	{
+		return;
+	}
+	for (int i = 2; i > 0; i--)
+	{
+		bpmValues[i] = bpmValues[i-1];
+	}
+	bpmValues[0] = bpm; //den neuesten eingelesene Wert an die Stelle 0 in Array tun
+
+	summe = 0;
+
+	for (int i = 0; i < 3; i++)
+	{
+		summe += bpmValues[i];
+	}
+	if(arrayLength < 3) {
+		arrayLength++;
+	}
+	average = summe / arrayLength;	
+	
+ }
+
+ //if no finger is on the sensor this method get called and sets all bpmValues to 0 - so if 0 is displayed no finger is on the sensor
+ void clearBpm() 
+ {
+	for (int i = 0; i < 10; i++)
+	{
+		bpmValues[i] = 0;
+	}	
+	average = 0;
+	arrayLength = 0;
+ }
 
 
 
