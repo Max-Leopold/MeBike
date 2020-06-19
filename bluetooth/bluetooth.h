@@ -11,7 +11,14 @@
 #define BLUETOOTH_H_
 
 #define DATA_DELIMITER "|"
+#define MESSAGE_BEGIN "<BOM>"
+#define MESSAGE_END "<EOM>"
 
+
+/************************************************************************/
+/* Initializes the bluetooth parameters need to send data               */
+/************************************************************************/
+void bluetooth_init(void);
 
 /************************************************************************/
 /* Expects the gps coordinates struct                                   */
