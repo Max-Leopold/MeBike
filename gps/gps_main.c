@@ -5,7 +5,7 @@
 #include "gps_main.h"
 #include "../uart/softuart.h"
 #include "../uart/serial.h"
-
+#include "../bluetooth/bluetooth.h"
 #include <string.h>
 
 char gps_buf[100];
@@ -36,7 +36,7 @@ void gps_main() {
         strcat(str_copy, ", GMT Time: ");
         strcat(str_copy, gpsCoordinates.gmt_time);
         serial_print_line(str_copy);
-        //TODO send data via bluetooth here
+		bluetooth_send_gps(gpsCoordinates);
     }
 }
 
