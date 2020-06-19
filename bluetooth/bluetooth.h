@@ -10,8 +10,8 @@
 #ifndef BLUETOOTH_H_
 #define BLUETOOTH_H_
 
+#define DATA_DELIMITER "|"
 
-void bluetooth_init(void);
 
 /************************************************************************/
 /* Expects the gps coordinates struct                                   */

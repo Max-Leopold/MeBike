@@ -5,7 +5,6 @@
  *  Author: Flo
  */ 
 
-#define DATA_DELIMITER "|"
 
 #include "bluetooth.h"
 #include "../uart/serial.h"
@@ -14,26 +13,19 @@
 
 
 /************************************************************************/
-/* Bluetooth uses the serial interface                                  */
-/************************************************************************/
-void bluetooth_init(){
-	serial_init();
-}
-
-/************************************************************************/
 /* Sends the gps struct data                                            */
 /************************************************************************/
 void bluetooth_send_gps(struct gps_coordinates coords){
 	char data[100];
-	strcpy(data, "<BOM>");
-	strcat(data, "gps");
-	strcat(data, DATA_DELIMITER);
-	strcat(data, coords.gmt_time);
-	strcat(data, DATA_DELIMITER);
-	strcat(data, coords.latitude);
-	strcat(data, DATA_DELIMITER);
-	strcat(data, coords.longitude);
-	strcat(data, "<EOM>");
+	strncpy(data, "<BOM>", 5);
+	strncat(data, "gps", 3);
+	strncat(data, DATA_DELIMITER, 1);
+	strncat(data, coords.gmt_time, strlen(coords.gmt_time));
+	strncat(data, DATA_DELIMITER, 1);
+	strncat(data, coords.latitude, strlen(coords.gmt_time));
+	strncat(data, DATA_DELIMITER, 1);
+	strncat(data, coords.longitude, strlen(coords.gmt_time));
+	strncat(data, "<EOM>", 5);
 	serial_print(data);
 }
 
