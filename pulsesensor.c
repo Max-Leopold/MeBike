@@ -12,15 +12,11 @@
  #include <stdbool.h>
  #include <avr/interrupt.h>
 
- 
+
  int adc_last_value;
-
  int bpmValues[3];
-
  int average = 0;
-
- int summe = 0;
-
+ int sum = 0;
  int arrayLength = 0;
 
 
@@ -47,11 +43,11 @@
 
  }
  
+ //heartbeat-detection method inspired from the datasheet from joy-it			
 bool heartbeatDetected(int delay, int ADCvalue)
  {
 	 static int maxValue = 0;
 	 static bool isPeak = false;
-	 
 	 
 	 bool result = false;
 	 
@@ -99,22 +95,24 @@ bool heartbeatDetected(int delay, int ADCvalue)
 	{
 		return;
 	}
+	//increases the position of the values ??by one
 	for (int i = 2; i > 0; i--)
 	{
 		bpmValues[i] = bpmValues[i-1];
 	}
-	bpmValues[0] = bpm; //den neuesten eingelesene Wert an die Stelle 0 in Array tun
+	bpmValues[0] = bpm; //put the latest value to position 0 of the array
 
-	summe = 0;
+	sum = 0;
 
+	//calculates the average of the 3 bpm values in the array
 	for (int i = 0; i < 3; i++)
 	{
-		summe += bpmValues[i];
+		sum += bpmValues[i];
 	}
 	if(arrayLength < 3) {
 		arrayLength++;
 	}
-	average = summe / arrayLength;	
+	average = sum / arrayLength;	
 	
  }
 
