@@ -6,8 +6,6 @@
 #include "uart/serial.h"
 #include "gps/gps_main.h"
 #include "bluetooth/bluetooth.h"
-#include "avr/delay.h"
-
 #include <avr/interrupt.h>
 
 void init() {
@@ -28,12 +26,6 @@ int main() {
 
     while (1) {
         gps_main();
-		struct gps_coordinates gps;
-		gps.gmt_time = "12";
-		gps.latitude = "345";
-		gps.longitude = "678";
-		bluetooth_send_gps(gps);
-		_delay_ms(1000);
     }
 }
 
