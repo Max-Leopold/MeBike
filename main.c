@@ -6,6 +6,7 @@
 #include "uart/serial.h"
 #include "gps/gps_main.h"
 #include "hall/hall_main.h"
+#include "dht11/dht11.h"
 #include "bluetooth/bluetooth.h"
 #include "adc/adc.h"
 #include "util/Interrupt/timer.h"
@@ -13,11 +14,8 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-<<<<<<< HEAD
 bool debugMode = false;
 
-=======
->>>>>>> f50383b... Added adc init
 void init() {
 	initMillis();
 
@@ -42,6 +40,6 @@ int main() {
         gps_main();
 		hall_main();
 		bno055_main(debugMode);
-
+        dht11_main();
     }
 }
