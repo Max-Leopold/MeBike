@@ -2,18 +2,39 @@
 // Created by Max Leopold on 06/06/2020.
 //
 
+#define F_CPU 16000000UL
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <avr/io.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <util/atomic.h>
+#include "uart/serial.h"
+#include "pulsesensor.h"
+#include "dht11.h"
 #include "main.h"
 #include "uart/serial.h"
 #include "gps/gps_main.h"
 #include "bluetooth/bluetooth.h"
-#include <avr/interrupt.h>
+
+
+int adc_current_value = 0;
+int adc_last_value = 0;
+unsigned long millis = 0;
+int bpm = 0;
+unsigned long waitTime = 0;
+int averageBpm = 0;
+long lastHearbeatdetected = 0;
+
 
 void init() {
 	// Bluetooth uses the serial class internally, so it does not need to be initialized here
 	serial_init();
-	
+
 	bluetooth_init();
-	
+
     sei();
 }
 
@@ -24,8 +45,72 @@ int main() {
 
     gps_init();
 
+    ADC_init();
+
     while (1) {
         gps_main();
+
+        char bpmValue[1];
+        sprintf(bpmValue, "%d", getBpm());
+
+
+        struct pulse_value data;
+        data.pulse = bpmValue[0];
+
+        //TO-DO - send via Bluetooth
+
+        /*
+        For testing stuff
+        //serial_print("BPM: ");
+        serial_print_line(bpmValue);
+        _delay_ms(1000);
+        */
+
+        /* ---------------------------------------------------------------- */
+
+         dht11_main();
     }
 }
+
+
+ ISR (ADC_vect)
+ {
+	 adc_last_value = adc_current_value;
+
+	 int ADCval = ADCL;
+	 ADCval = (ADCH << 8) + ADCval;    // ADCH is read so ADC can be updated again
+
+	 adc_current_value = ADCval;
+
+	 if(millis >= waitTime)
+	 {
+		 static int beatMsec = 0;
+
+		 if (heartbeatDetected(60,adc_current_value))
+		 {
+
+			 lastHearbeatdetected = millis;
+			 bpm = 60000 / beatMsec;
+
+			 beatMsec = 0;
+
+			 addValue(bpm);
+		 } else {
+
+			if(millis - lastHearbeatdetected > 7000) {
+				clearBpm();
+			}
+		 }
+		 waitTime = millis + 60;
+		 beatMsec += 60;
+
+	 }
+ }
+
+
+ ISR (TIMER2_COMPA_vect)  // timer 2 counts the millis
+ {
+	 millis++;
+
+ }
 
