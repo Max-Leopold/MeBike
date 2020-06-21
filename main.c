@@ -4,11 +4,10 @@
  *
  * Author : Frederic Henn
  */ 
-
+#ifndef F_CPU
 #define F_CPU 16000000UL
-#include <avr/io.h>
+#endif
 #include <avr/interrupt.h>
-#include <util/delay.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <avr/io.h>
@@ -47,14 +46,6 @@ int main(void)
 		data.pulse = bpmValue[0];
 		
 		//TO-DO - send via Bluetooth
-
-		/*
-		For testing stuff
-		//serial_print("BPM: ");
-		serial_print_line(bpmValue);
-		_delay_ms(1000);
-		*/
-
 	}
 }
 
