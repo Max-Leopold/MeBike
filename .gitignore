@@ -57,6 +57,7 @@ Debug/
 *.vs*
 *.atsuo
 .vs/MeBike/v14/.atsuo
+/cmake-build-debug
 
 # IntelliJ Idea
 *.iml
