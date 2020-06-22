@@ -42,8 +42,6 @@ int main() {
     while (1) {
         gps_main();
 
-        interrupt_init();
-
         pulsesensor_main();
     }
 }
