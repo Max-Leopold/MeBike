@@ -6,6 +6,7 @@
 #include "uart/serial.h"
 #include "gps/gps_main.h"
 #include "bluetooth/bluetooth.h"
+#include "adc/adc.h"
 #include <avr/interrupt.h>
 
 void init() {
@@ -13,6 +14,8 @@ void init() {
 	serial_init();
 	
 	bluetooth_init();
+
+	ADC_init();
 	
     sei();
 }
