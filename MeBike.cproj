@@ -132,6 +132,18 @@
     <Compile Include="gps\gps_main.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="hall\adcHall\adcHall.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hall\adcHall\adcHall.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hall\hall_main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hall\hall_main.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
@@ -150,16 +162,33 @@
     <Compile Include="uart\softuart.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="util\util.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="util\util.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Debug\util\util.d">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="Debug\util\util.o">
+      <SubType>compile</SubType>
+    </None>
     <None Include="README.md">
       <SubType>compile</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bluetooth\" />
+    <Folder Include="Debug\" />
+    <Folder Include="Debug\util\" />
     <Folder Include="gps\" />
+    <Folder Include="hall" />
+    <Folder Include="hall\adcHall" />
     <Folder Include="uart\" />
+    <Folder Include="util\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
