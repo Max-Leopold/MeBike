@@ -6,10 +6,6 @@
 
  #include "serial.h"
  #include <avr/io.h>
- #include <stdio.h>
- #include <util/delay.h>
- #include <stdint.h>
- #include <stdbool.h>
  #include <avr/interrupt.h>
 
 
@@ -126,18 +122,3 @@ bool heartbeatDetected(int delay, int ADCvalue)
 	average = 0;
 	arrayLength = 0;
  }
-
-
-
- 
-
-
-
-
-
-
- 
-
-
-
-

@@ -11,9 +11,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <avr/io.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <util/atomic.h>
 #include "uart/serial.h"
 #include "pulsesensor.h"
 
