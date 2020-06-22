@@ -28,13 +28,13 @@ void bluetooth_init(){
 void bluetooth_send_gps(struct gps_coordinates coords){
 	char data[100];
 	strncpy(data, "<BOM>", BOM_SIZE);
-	strncat(data, "gps", sizeof("gps"));
+	strncat(data, "gps", strlen("gps"));
 	strncat(data, DATA_DELIMITER, DELIMITER_SIZE);
-	strncat(data, coords.gmt_time, sizeof(coords.gmt_time));
+	strncat(data, coords.gmt_time, strlen(coords.gmt_time));
 	strncat(data, DATA_DELIMITER, DELIMITER_SIZE);
-	strncat(data, coords.latitude, sizeof(coords.latitude));
+	strncat(data, coords.latitude, strlen(coords.latitude));
 	strncat(data, DATA_DELIMITER, DELIMITER_SIZE);
-	strncat(data, coords.longitude, sizeof(coords.longitude));
+	strncat(data, coords.longitude, strlen(coords.longitude));
 	strncat(data, "<EOM>", EOM_SIZE);
 	serial_print(data);
 }

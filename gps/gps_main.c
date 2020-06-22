@@ -35,7 +35,7 @@ void gps_main() {
         strcat(str_copy, gpsCoordinates.longitude);
         strcat(str_copy, ", GMT Time: ");
         strcat(str_copy, gpsCoordinates.gmt_time);
-        serial_print_line(str_copy);
+        //serial_print_line(str_copy);
 		bluetooth_send_gps(gpsCoordinates);
     }
 }
