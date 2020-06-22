@@ -1,0 +1,44 @@
+C:\Users\hennf\AppData\Local\JetBrains\CLion2020.1\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /cygdrive/c/Users/hennf/CLionProjects/MeBike
+-- The C compiler identification is GNU 9.3.0
+-- The CXX compiler identification is unknown
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/CC
+-- Check for working CXX compiler: /usr/bin/CC -- broken
+CMake Error at /cygdrive/c/Users/hennf/AppData/Local/JetBrains/CLion2020.1/cygwin_cmake/share/cmake-3.16.5/Modules/CMakeTestCXXCompiler.cmake:53 (message):
+  The C++ compiler
+
+    "/usr/bin/CC"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: /cygdrive/c/Users/hennf/CLionProjects/MeBike/cmake-build-debug/CMakeFiles/CMakeTmp
+    
+    Run Build Command(s):/usr/bin/make.exe cmTC_d8baf/fast && /usr/bin/make -f CMakeFiles/cmTC_d8baf.dir/build.make CMakeFiles/cmTC_d8baf.dir/build
+    make[1]: Entering directory '/cygdrive/c/Users/hennf/CLionProjects/MeBike/cmake-build-debug/CMakeFiles/CMakeTmp'
+    Building CXX object CMakeFiles/cmTC_d8baf.dir/testCXXCompiler.cxx.o
+    /usr/bin/CC     -o CMakeFiles/cmTC_d8baf.dir/testCXXCompiler.cxx.o -c /cygdrive/c/Users/hennf/CLionProjects/MeBike/cmake-build-debug/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+    CC: fatal error: cannot execute 'cc1plus': spawn: No such file or directory
+    compilation terminated.
+    make[1]: *** [CMakeFiles/cmTC_d8baf.dir/build.make:66: CMakeFiles/cmTC_d8baf.dir/testCXXCompiler.cxx.o] Error 1
+    make[1]: Leaving directory '/cygdrive/c/Users/hennf/CLionProjects/MeBike/cmake-build-debug/CMakeFiles/CMakeTmp'
+    make: *** [Makefile:121: cmTC_d8baf/fast] Error 2
+    
+    
+
+  
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:5 (PROJECT)
+
+
+-- Configuring incomplete, errors occurred!
+See also "/cygdrive/c/Users/hennf/CLionProjects/MeBike/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "/cygdrive/c/Users/hennf/CLionProjects/MeBike/cmake-build-debug/CMakeFiles/CMakeError.log".

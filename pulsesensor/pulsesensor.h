@@ -19,6 +19,8 @@ void addValue(int);
 
 void clearBpm();
 
+void interrupt_init();
+
 void pulsesensor_main();
 
 #endif /* PULSESENSOR_H_ */

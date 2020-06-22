@@ -27,6 +27,8 @@ void init() {
 
     ADC_init();
 
+    interrupt_init();
+
     sei();
 }
 
