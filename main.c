@@ -23,17 +23,26 @@ unsigned long waitTime = 0;
 int averageBpm = 0;
 long lastHearbeatdetected = 0;
 
+void init() {
+	// Bluetooth uses the serial class internally, so it does not need to be initialized here
+	serial_init();
+
+	bluetooth_init();
+
+    sei();
+}
 
 int main(void)
 {
-	
-    sei();
+    init();
 
-	serial_init();
+    gps_init();
 
 	ADC_init();
 
 	while(1) {
+
+	    gps_main();
 
 		char bpmValue[1];
 		sprintf(bpmValue, "%d", getBpm());
