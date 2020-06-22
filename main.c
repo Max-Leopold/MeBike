@@ -5,15 +5,16 @@
 #include "main.h"
 #include "uart/serial.h"
 #include "gps/gps_main.h"
+#include "hall/hall_main.h"
 #include "bluetooth/bluetooth.h"
 #include <avr/interrupt.h>
 
 void init() {
 	// Bluetooth uses the serial class internally, so it does not need to be initialized here
 	serial_init();
-	
+
 	bluetooth_init();
-	
+
     sei();
 }
 
@@ -26,6 +27,7 @@ int main() {
 
     while (1) {
         gps_main();
+		hall_main();
     }
 }
 
