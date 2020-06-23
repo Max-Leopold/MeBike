@@ -40,7 +40,7 @@
 /*              INCLUDES    */
 /*******************************************************/
 #include "bno055.h"
-
+#include "../uart/serial.h"
 #ifdef __KERNEL__
 #include <linux/types.h>
 #include <linux/kernel.h>
@@ -90,25 +90,26 @@ static struct bno055_t *p_bno055;
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_init(struct bno055_t *bno055)
 {
+	serial_print_line("Line 92");
     /* Variable used to return value of
      * communication routine*/
     BNO055_RETURN_FUNCTION_TYPE com_rslt = BNO055_ERROR;
     u8 data_u8 = BNO055_INIT_VALUE;
     u8 bno055_page_zero_u8 = BNO055_PAGE_ZERO;
-
+	serial_print_line("Line 99");
     /* Array holding the Software revision id
      */
     u8 a_SW_ID_u8[BNO055_REV_ID_SIZE] = { BNO055_INIT_VALUE, BNO055_INIT_VALUE };
 
     /* stuct parameters are assign to bno055*/
     p_bno055 = bno055;
-
+	serial_print_line("Line 106");
     /* Write the default page as zero*/
     com_rslt = p_bno055->BNO055_BUS_WRITE_FUNC(p_bno055->dev_addr,
                                                BNO055_PAGE_ID_REG,
                                                &bno055_page_zero_u8,
                                                BNO055_GEN_READ_WRITE_LENGTH);
-
+	serial_print_line("Line 112");
     /* Read the chip id of the sensor from page
      * zero 0x00 register*/
     com_rslt += p_bno055->BNO055_BUS_READ_FUNC(p_bno055->dev_addr,
@@ -116,7 +117,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_init(struct bno055_t *bno055)
                                                &data_u8,
                                                BNO055_GEN_READ_WRITE_LENGTH);
     p_bno055->chip_id = data_u8;
-
+	serial_print_line("Line 120");
     /* Read the accel revision id from page
      * zero 0x01 register*/
     com_rslt += p_bno055->BNO055_BUS_READ_FUNC(p_bno055->dev_addr,
@@ -124,7 +125,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_init(struct bno055_t *bno055)
                                                &data_u8,
                                                BNO055_GEN_READ_WRITE_LENGTH);
     p_bno055->accel_rev_id = data_u8;
-
+	serial_print_line("Line 128");
     /* Read the mag revision id from page
      * zero 0x02 register*/
     com_rslt += p_bno055->BNO055_BUS_READ_FUNC(p_bno055->dev_addr,

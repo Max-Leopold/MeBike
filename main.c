@@ -5,6 +5,8 @@
 #include "main.h"
 #include "uart/serial.h"
 #include "gps/gps_main.h"
+#include <util/delay.h>
+
 
 #include <avr/interrupt.h>
 
@@ -17,11 +19,14 @@ void init() {
 int main() {
 
     init();
-
     gps_init();
+	bno_init();
 
     while (1) {
         gps_main();
+		bno055_main();
+		_delay_ms(500);
     }
 }
+
 

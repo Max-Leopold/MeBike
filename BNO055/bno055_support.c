@@ -40,6 +40,7 @@
 *  Includes
 *---------------------------------------------------------------------------*/
 #include "bno055.h"
+#include "bno055_support.h"
 
 /*----------------------------------------------------------------------------*
 *  The following APIs are used for reading and writing of
@@ -70,10 +71,7 @@ s8 BNO055_I2C_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
  */
 s8 BNO055_I2C_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
 
-/*
- * \Brief: I2C init routine
- */
-s8 I2C_routine(void);
+
 
 /*  Brief : The delay routine
  *  \param : delay in ms
@@ -299,7 +297,7 @@ s32 bno055_data_readout_template(void)
 
     /*  Based on the user need configure I2C interface.
      *  It is example code to explain how to use the bno055 API*/
-    I2C_routine();
+    //I2C_routine();
 #endif
 
     /*--------------------------------------------------------------------------*
