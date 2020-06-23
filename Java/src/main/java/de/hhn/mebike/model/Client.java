@@ -2,6 +2,7 @@ package de.hhn.mebike.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,7 +22,7 @@ public class Client {
     @Column(unique = true)
     private String name;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Tour> tours;
 
     public Client() {
@@ -41,5 +42,14 @@ public class Client {
 
     public void setTours(List<Tour> tours) {
         this.tours = tours;
+    }
+
+    @NonNull
+    public String getName() {
+        return name;
+    }
+
+    public void setName(@NonNull String name) {
+        this.name = name;
     }
 }

@@ -3,6 +3,7 @@ package de.hhn.mebike.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +17,7 @@ public class Tour implements Serializable {
     @GeneratedValue
     private long id;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<TourPoint> tourPoints;
 
     public Tour() {
