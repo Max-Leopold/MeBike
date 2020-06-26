@@ -10,11 +10,40 @@
 #include "adcHall/adcHall.h"
 #include "../uart/serial.h"
 #include "../util/util.h"
+#include "../util/Interrupt/timer.h"
 
-void hall_main() {
-	int adcout = getAdcOut();
-	char adcOutBuffer[4];
-	convertIntToString(adcout, 4, adcOutBuffer);
-	serial_print_line(adcOutBuffer);
+int changesSinceReset;
+char lastSignal;
+unsigned long startMillis;
+
+void hall_init(){
+	startMillis = getMillis();
 }
 
+void hall_main() {
+	
+	calcHallRoation();
+	
+	int adcout = getAdcOut();
+	char currentSignal = 0;
+	if(adcout > 50){
+		currentSignal = 1;	
+	}
+	if(currentSignal != lastSignal){
+		changesSinceReset++;
+	}
+	lastSignal = currentSignal;
+}
+
+void calcHallRoation(){
+	int millisElapsed = getMillis() - startMillis;
+	if(millisElapsed > 1000){
+		startMillis = getMillis();
+		char signalBuffer[4];
+		//changesSinceReset*5 because its called every second => times 60
+		//then divided by 12 because the wheel has 12 magnets => each signal is 1/12th of a rotation
+		convertIntToString((changesSinceReset*5), 4, signalBuffer);
+		serial_print_line(signalBuffer);
+		changesSinceReset = 0;
+	}
+}

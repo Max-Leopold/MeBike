@@ -6,5 +6,6 @@
 #define ME_BIKE_MAIN_H
 
 void init(void);
+int main(void);
 
 #endif //ME_BIKE_MAIN_H

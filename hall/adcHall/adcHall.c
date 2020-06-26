@@ -1,5 +1,5 @@
 /*
- * CFile1.c
+ * adcHall.c
  *
  * Created: 22.06.2020 22:23:08
  *  Author: Wanja
