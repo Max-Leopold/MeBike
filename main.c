@@ -5,13 +5,16 @@
 #include "main.h"
 #include "uart/serial.h"
 #include "gps/gps_main.h"
+#include "BNO055/bno055_main.h"
 #include <util/delay.h>
-
-
 #include <avr/interrupt.h>
 
 void init() {
-    serial_init();
+	// Bluetooth uses the serial class internally, so it does not need to be initialized here
+	serial_init();
+	bluetooth_init();
+	gps_init();
+	bno_init();
     sei();
 }
 
@@ -19,13 +22,12 @@ void init() {
 int main() {
 
     init();
-    gps_init();
-	bno_init();
 
     while (1) {
         gps_main();
+		hall_main();
 		bno055_main();
-		_delay_ms(500);
+
     }
 }
 

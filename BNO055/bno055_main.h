@@ -15,7 +15,7 @@ void bno055_main(void);
 
 struct BNOGYRO{
 	//tilt area
-	int16_t eulerPitch;
+	int Pitch;
 	};
 	
 struct BNOACCEL{

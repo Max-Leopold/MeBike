@@ -67,3 +67,9 @@ Debug/
 # Maven
 /target
 
+#bno library
+bno055.c
+bno055.h
+bno055_support.c
+bno055_support.h
+
