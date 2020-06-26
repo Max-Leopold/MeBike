@@ -126,6 +126,12 @@
     <Compile Include="bluetooth\bluetooth.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="BNO055\bno055_main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="BNO055\bno055_main.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="gps\gps_main.c">
       <SubType>compile</SubType>
     </Compile>
@@ -145,6 +151,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="i2cmaster\i2cmaster.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="i2cmaster\i2cmaster.S">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="i2cmaster\test_i2cmaster.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="i2cmaster\twimaster.c">
@@ -182,12 +194,28 @@
     <None Include="Debug\util\util.o">
       <SubType>compile</SubType>
     </None>
+    <None Include="i2cmaster\doxygen.css">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="i2cmaster\doxygen.png">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="i2cmaster\makefile.i2cmaster">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="i2cmaster\makefile.twimaster">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="i2cmaster\manual__i2cmaster.html">
+      <SubType>compile</SubType>
+    </None>
     <None Include="README.md">
       <SubType>compile</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bluetooth\" />
+    <Folder Include="BNO055\" />
     <Folder Include="Debug\" />
     <Folder Include="Debug\util\" />
     <Folder Include="gps\" />
