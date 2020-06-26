@@ -10,8 +10,6 @@
 #include <compat/twi.h>
 
 #include "i2cmaster.h"
-#include "../uart/serial.h"
-
 
 /* define CPU frequency in hz here if not defined in Makefile */
 #ifndef F_CPU
@@ -64,8 +62,6 @@ unsigned char i2c_start(unsigned char address)
 	// check value of TWI Status Register. Mask prescaler bits.
 	twst = TW_STATUS & 0xF8;
 	char str[10];
-	sprintf(str, "%d", twst);
-	//serial_print_line(str);
 	if ( (twst != TW_MT_SLA_ACK) && (twst != TW_MR_SLA_ACK) ) return 1;
 	//serial_print_line("TWIMASTER LINE 67");
 	return 0;
@@ -109,8 +105,7 @@ void i2c_start_wait(unsigned char address)
     	{    	    
     	    /* device busy, send stop condition to terminate write operation */
 	        TWCR = (1<<TWINT) | (1<<TWEN) | (1<<TWSTO);
-			serial_print_line("Device busy");
-	        
+			        
 	        // wait until stop condition is executed and bus released
 	        while(TWCR & (1<<TWSTO));
 	        
