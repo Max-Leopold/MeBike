@@ -1,5 +1,5 @@
 /*
- * IncFile1.h
+ * adcHall.h
  *
  * Created: 22.06.2020 22:23:21
  *  Author: Wanja

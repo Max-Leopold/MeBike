@@ -8,6 +8,8 @@
 #ifndef ME_BIKE_HALL_MAIN_H
 #define ME_BIKE_HALL_MAIN_H
 
+void hall_init(void);
 void hall_main(void);
+void calcHallRoation(void);
 
 #endif //ME_BIKE_HALL_MAIN
