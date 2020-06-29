@@ -13,17 +13,18 @@
 #include "../uart/serial.h"
 #include "../i2cmaster/i2cmaster.h"
 #include "../util/util.h"
-#include "stdio.h"
 #include <util/delay.h>
 #include <avr/io.h>
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define DEVICE_ADDRESS (0x28 << 1)
 
 struct BNODATA bnodata;
+
 
 bno_init(){
 
@@ -39,42 +40,8 @@ bno_init(){
 }
 
 void bno055_main(){
-readPitch();
-}
-
-//Method to read and print single register of 8 bit over uart
-//param: Address of the register to read
-void printRegister(uint8_t address){
-	i2c_start_wait(DEVICE_ADDRESS+I2C_WRITE);			// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 0
-	i2c_write(address);									// write the register address
-	i2c_start(DEVICE_ADDRESS+I2C_READ);					// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 1
-	uint8_t rtn = i2c_readNak();						// read the previously set register and send NACK, so the sensor won't read the subsequent register
-	i2c_stop();											// stop the i2c communication
-
-	char str[4];
-	convertIntToString(rtn, 4, &str);
-	serial_print_line(str);
-}
-
-//Method to write value to specific register
-//param address: register address
-//param value: value to write 
-void writeRegister(uint8_t address, uint8_t value){
-	i2c_start(DEVICE_ADDRESS+I2C_WRITE);				// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 0
-	i2c_write(address);									// write the register address
-	i2c_write(value);									// write the value in the register
-	i2c_stop();											// stop the i2c communication
-}												   
-
-//Method to read single register of 8 bit
-//param: Address of the register to read
-uint8_t readRegister(uint8_t reg){						
-	i2c_start(DEVICE_ADDRESS+I2C_WRITE);		   		// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 0
-	i2c_write(reg);										// write the register address
-	i2c_start(DEVICE_ADDRESS+I2C_READ);					// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 1
-	uint8_t returnVal = i2c_readNak();					// read the previously set register and send NACK, so the sensor won't read the subsequent register
-	i2c_stop();											// stop the i2c communication
-	return returnVal;
+//readPitch();
+readAcceleration();
 }
 
 //Method to read the current pitch data of the BNO055 and store it in the BNODATA struct
@@ -90,14 +57,55 @@ void readPitch(){
 	i2c_stop();											// stop the i2c communication
 
 	pitch = (pitch/ 16.0);
-	
+
 	char str[4];
-	// TODO: change to own method, but not yet working 
-	//convertIntToString(bnogyro.Pitch, 4, &str);
 	sprintf(str, "%d", pitch);
 	bnodata.Pitch = str;
-	serial_print_line(str);
-	return bnodata.Pitch;
+}
+
+// Read all acceleration registers from the sensor. Starting from register 0x28 up to 0x2D. Values in g.
+void readAcceleration(){
+	i2c_start(DEVICE_ADDRESS+I2C_WRITE);
+	i2c_write(0x28);
+	i2c_start(DEVICE_ADDRESS+I2C_READ);
+	int forw, sidew, upw;
+	double forwD, sidewD, upwD;
+	
+	sidew =  i2c_readAck();					//reg 0x28 Linear acceleration x axis LSB
+	sidew |= i2c_readAck() <<8;				//reg 0x29 Linear acceleration x axis MSB
+	
+	forw =  i2c_readAck();					//reg 0x2A Linear acceleration y axis LSB
+	forw |= i2c_readAck() << 8;				//reg 0x2B Linear acceleration y axis MSB
+	
+	upw =  i2c_readAck();					//reg 0x2C Linear acceleration z axis LSB
+	upw |= i2c_readNak() << 8;				//reg 0x2D Linear acceleration z axis MSB
+	
+	i2c_stop();
+	
+	forwD =  (((double)forw)/100.0)/9.81;	//convert raw sensor data to g (9.81 m/s^2) as double value.
+	sidewD = (((double)sidew)/100.0)/9.81;
+	upwD =   (((double)upw)/100.0)/9.81;
+	
+	char str[10];
+
+	//Convert all three linear accelerations in strings and save them in the struct
+	dtostrf(forwD, 3, 2, &str);
+	bnodata.accelForwards = str;
+	
+	dtostrf(sidewD, 3, 2, str);
+	bnodata.accelSideways = str;
+	
+	dtostrf(upwD, 3, 2, str);
+	bnodata.accelUpwards = str;
+
+	//char str_copy[100];
+	//strcpy(str_copy, "forward: ");
+	//strcat(str_copy, bnodata.accelForwards);
+	//strcat(str_copy, ", sideways: ");
+	//strcat(str_copy, bnodata.accelSideways);
+	//strcat(str_copy, ", upwards: ");
+	//strcat(str_copy, bnodata.accelUpwards);
+	//serial_print_line(str_copy);		
 }
 
 

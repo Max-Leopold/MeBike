@@ -16,8 +16,9 @@ void bno055_main(void);
 struct BNODATA{
 	char *Pitch;
 	
-	char *xAccel;
-	char *yAccel;
+	char *accelForwards;
+	char *accelSideways;
+	char *accelUpwards;
 	};
 
 #endif /* IBNO055_MAIN_H_ */
