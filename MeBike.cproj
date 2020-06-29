@@ -144,6 +144,12 @@
     <Compile Include="hall\hall_main.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="i2cmaster\i2cmaster.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="i2cmaster\twimaster.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
@@ -187,6 +193,7 @@
     <Folder Include="gps\" />
     <Folder Include="hall" />
     <Folder Include="hall\adcHall" />
+    <Folder Include="i2cmaster\" />
     <Folder Include="uart\" />
     <Folder Include="util\" />
   </ItemGroup>
