@@ -13,13 +13,11 @@ void bno_init(void);
 
 void bno055_main(void);
 
-struct BNOGYRO{
-	//tilt area
-	int Pitch;
-	};
+struct BNODATA{
+	char *Pitch;
 	
-struct BNOACCEL{
 	char *xAccel;
+	char *yAccel;
 	};
 
 #endif /* IBNO055_MAIN_H_ */
