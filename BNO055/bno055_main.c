@@ -20,12 +20,13 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define DEVICE_ADDRESS (0x28 << 1)
 
-struct BNODATA bnodata;
-
 bool debugMode;
+
+typedef struct bnodata BNODATA; 
 
 bno_init(){
 
@@ -40,14 +41,14 @@ bno_init(){
 	i2c_stop();
 }
 
-void bno055_main(bool debug){
+void getBNOData(BNODATA *bnodata, bool debug){
 	debugMode = debug;
-	readPitch();
-	readAcceleration();
+	readPitch(bnodata);
+	readAcceleration(bnodata);
 }
 
 //Method to read the current pitch data of the BNO055 and store it in the BNODATA struct
-void readPitch(){
+void readPitch(BNODATA *bnodata){
 	int pitch;
 	
 	i2c_start(DEVICE_ADDRESS+I2C_WRITE);				// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 0
@@ -60,57 +61,52 @@ void readPitch(){
 
 	pitch = (pitch/ 16.0);
 
-	char str[4];
-	sprintf(str, "%d", pitch);
-	bnodata.Pitch = str;
+	int size = snprintf(NULL, 0, "%d", pitch);
+	char * pitchString = malloc(size + 1);
+	sprintf(pitchString, "%d", pitch);
+
+	bnodata->Pitch = pitchString;
 	
 	if(debugMode){
-		serial_print_line(str);
+		serial_print_line(pitchString);
 	}
 }
 
 // Read all acceleration registers from the sensor. Starting from register 0x28 up to 0x2D. Values in g.
-void readAcceleration(){
+void readAcceleration(BNODATA *bnodata){
 	i2c_start(DEVICE_ADDRESS+I2C_WRITE);
 	i2c_write(0x28);
 	i2c_start(DEVICE_ADDRESS+I2C_READ);
 	int forw, sidew, upw;
-	double forwD, sidewD, upwD;
+	int forwD, sidewD, upwD;
 	
 	sidew =  i2c_readAck();					//reg 0x28 Linear acceleration x axis LSB
 	sidew |= i2c_readAck() <<8;				//reg 0x29 Linear acceleration x axis MSB
 	
 	forw =  i2c_readAck();					//reg 0x2A Linear acceleration y axis LSB
-	forw |= i2c_readAck() << 8;				//reg 0x2B Linear acceleration y axis MSB
-	
-	upw =  i2c_readAck();					//reg 0x2C Linear acceleration z axis LSB
-	upw |= i2c_readNak() << 8;				//reg 0x2D Linear acceleration z axis MSB
+	forw |= i2c_readNak() << 8;				//reg 0x2B Linear acceleration y axis MSB
 	
 	i2c_stop();
 	
-	forwD =  (((double)forw)/100.0)/9.81;	//convert raw sensor data to g (9.81 m/s^2) as double value.
-	sidewD = (((double)sidew)/100.0)/9.81;
-	upwD =   (((double)upw)/100.0)/9.81;
-	
-	char str[10];
+	forwD =  (int) ((double) forw) / 9.81;	//convert raw sensor data to g (9.81 m/s^2) as double value.
+	sidewD = (int) ((double) sidew) /9.81;
 
-	//Convert all three linear accelerations in strings and save them in the struct
-	dtostrf(forwD, 3, 2, &str);
-	bnodata.accelForwards = str;
+	int size = snprintf(NULL, 0, "%d", forwD);
+	char * forwardString = malloc(size + 1);
+	sprintf(forwardString, "%d", forwD);
+	bnodata->accelForwards = forwardString;
 	
-	dtostrf(sidewD, 3, 2, str);
-	bnodata.accelSideways = str;
+	size = snprintf(NULL, 0, "%d", sidewD);
+	char * sideString = malloc(size + 1);
+	sprintf(sideString, "%d", sidewD);
+	bnodata->accelSideways = sideString;
 
     if(debugMode){
-	char str_copy[100];
-	strcpy(str_copy, "forward: ");
-	strcat(str_copy, bnodata.accelForwards);
-	strcat(str_copy, ", sideways: ");
-	strcat(str_copy, bnodata.accelSideways);
-	serial_print_line(str_copy);
-    }
+		char str_copy[100];
+		strcpy(str_copy, "forward: ");
+		strcat(str_copy, bnodata->accelForwards);
+		strcat(str_copy, ", sideways: ");
+		strcat(str_copy, bnodata->accelSideways);
+		serial_print_line(str_copy);
+	}
 }
-
-
-
-

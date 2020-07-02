@@ -12,13 +12,15 @@
 
 void bno_init(void);
 
-void bno055_main(bool debugMode);
-
-struct BNODATA{
+typedef struct bnodata{
 	char *Pitch;
 	
 	char *accelForwards;
 	char *accelSideways;
-	};
+	
+	char *temperature;
+} bnodata;
+
+void getBNOData(bnodata *bnodata, bool debug);
 
 #endif /* IBNO055_MAIN_H_ */
