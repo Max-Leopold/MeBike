@@ -4,7 +4,7 @@ SET(CMAKE_SYSTEM_NAME Generic)
 #============================================================================================
 PROJECT(ME_BIKE)      # <-- Projektname
 
-SET(FILES main.c main.h uart/serial.c uart/serial.h uart/softuart.c uart/softuart.h gps/gps_main.c gps/gps_main.h)     # <-- Quelldatei(en)
+SET(FILES main.c main.h uart/serial.c uart/serial.h uart/softuart.c uart/softuart.h gps/gps_main.c gps/gps_main.h adc/adc.c adc/adc.h pulsesensor/pulsesensor.c pulsesensor/pulsesensor.h bluetooth/bluetooth.h bluetooth/bluetooth.c util/util.c util/util.h)     # <-- Quelldatei(en)
 
 SET(DEVICE atmega328p)   # <-- MCU
 SET(FREQ 16000000)   # <-- MCU-Frequenz

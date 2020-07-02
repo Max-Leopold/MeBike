@@ -7,21 +7,24 @@
 #include "gps/gps_main.h"
 #include "hall/hall_main.h"
 #include "bluetooth/bluetooth.h"
+#include "adc/adc.h"
 #include "util/Interrupt/timer.h"
 #include "BNO055/bno055_main.h"
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-
 void init() {
 	initMillis();
-	
+
 	// Bluetooth uses the serial class internally, so it does not need to be initialized here
 	serial_init();
 	bluetooth_init();
+	ADC_init();
 	hall_init();
 	gps_init();
 	bno_init();
+
+    interrupt_init();
 
     sei();
 }
