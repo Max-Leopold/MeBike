@@ -18,8 +18,8 @@ int getAdcOut(){
 	DDRB |= (1<< DDB4);
 	PORTB |= (1 << PORTB4);
 	DDRB |= (1<< DDB3);
-	DDRB |= (1<< DDB1);
-	PORTB &= ~(1 << PORTB1);
+	DDRD |= (1<< DDD7);
+	PORTD &= ~(1 << PORTD7);
 	PORTB &= ~(1 << PORTB4);
 	int commandout = 0;
 	commandout |= 0x18; //  # start bit + single-ended bit
@@ -32,15 +32,15 @@ int getAdcOut(){
 			PORTB &= ~(1 << PORTB3);
 		}
 		commandout <<= 1;
-		PORTB |= (1 << PORTB1);
-		PORTB &= ~(1 << PORTB1);
+		PORTD |= (1 << PORTD7);
+		PORTD &= ~(1 << PORTD7);
 	}
 
 	int adcout = 0;
 	// read in one empty bit, one null bit and 10 ADC bits
 	for (int i=0; i<12; i++) {
-		PORTB |= (1 << PORTB1);
-		PORTB &= ~(1 << PORTB1);
+		PORTD |= (1 << PORTD7);
+		PORTD &= ~(1 << PORTD7);
 		adcout <<= 1;
 		if(PINB & (1 << DDB2)){
 			adcout |= 0x1;
