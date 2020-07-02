@@ -5,20 +5,20 @@
  *  Author: nicok
  */ 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifndef IBNO055_MAIN_H_
 #define IBNO055_MAIN_H_
 
 void bno_init(void);
 
-void bno055_main(void);
+void bno055_main(bool debugMode);
 
 struct BNODATA{
 	char *Pitch;
 	
 	char *accelForwards;
 	char *accelSideways;
-	char *accelUpwards;
 	};
 
 #endif /* IBNO055_MAIN_H_ */

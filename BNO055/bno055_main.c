@@ -25,6 +25,7 @@
 
 struct BNODATA bnodata;
 
+bool debugMode;
 
 bno_init(){
 
@@ -39,9 +40,10 @@ bno_init(){
 	i2c_stop();
 }
 
-void bno055_main(){
-//readPitch();
-readAcceleration();
+void bno055_main(bool debug){
+	debugMode = debug;
+	readPitch();
+	readAcceleration();
 }
 
 //Method to read the current pitch data of the BNO055 and store it in the BNODATA struct
@@ -61,6 +63,10 @@ void readPitch(){
 	char str[4];
 	sprintf(str, "%d", pitch);
 	bnodata.Pitch = str;
+	
+	if(debugMode){
+		serial_print_line(str);
+	}
 }
 
 // Read all acceleration registers from the sensor. Starting from register 0x28 up to 0x2D. Values in g.
@@ -94,18 +100,15 @@ void readAcceleration(){
 	
 	dtostrf(sidewD, 3, 2, str);
 	bnodata.accelSideways = str;
-	
-	dtostrf(upwD, 3, 2, str);
-	bnodata.accelUpwards = str;
 
-	//char str_copy[100];
-	//strcpy(str_copy, "forward: ");
-	//strcat(str_copy, bnodata.accelForwards);
-	//strcat(str_copy, ", sideways: ");
-	//strcat(str_copy, bnodata.accelSideways);
-	//strcat(str_copy, ", upwards: ");
-	//strcat(str_copy, bnodata.accelUpwards);
-	//serial_print_line(str_copy);		
+    if(debugMode){
+	char str_copy[100];
+	strcpy(str_copy, "forward: ");
+	strcat(str_copy, bnodata.accelForwards);
+	strcat(str_copy, ", sideways: ");
+	strcat(str_copy, bnodata.accelSideways);
+	serial_print_line(str_copy);
+    }
 }
 
 
