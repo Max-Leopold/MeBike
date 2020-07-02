@@ -10,21 +10,57 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
+#include "../adc/adc.h"
+#include "../util/Interrupt/timer.h"
 
-
-int adc_last_value;
 int bpmValues[3];
 int average = 0;
 int sum = 0;
 int arrayLength = 0;
 struct pulse_value pulse;
 unsigned long startMillis;
+int waitTime = 60;
+
+
+void pulsesensor_init() {
+    startMillis = getMillis();
+}
+
 
 void pulsesensor_main() {
     char bpmValue[3] = {0};
     convertIntToString(getBpm(), 3, bpmValue);
-
     pulse = bpmValue;
+
+    /* if-statement in which we get the information if a heartbeat is detected or not
+    ---> if yes: the value gets added to the bpmValues-array via the addValue-method
+    ---> if the sensor doesn't recognize a signal within 7 seconds the output will be 0 */
+
+    int elapsedMillis = getMillis() - startMillis;
+    if (elapsedMillis >= waitTime){
+        startMillis = getMillis();
+        static int beatMsec = 0;
+
+        if (heartbeatDetected(60, adc_current_value)) {
+
+            lastHearbeatdetected = millis;
+            bpm = 60000 / beatMsec;
+
+            beatMsec = 0;
+
+            addValue(bpm);
+        } else {
+
+            if (millis - lastHearbeatdetected > 7000) {
+                clearBpm();
+            }
+        }
+        beatMsec += 60;
+
+    }
+
+
+
 }
 
 //heartbeat-detection method inspired from the datasheet from joy-it

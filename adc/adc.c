@@ -8,11 +8,6 @@
 
 int adc_current_value = 0;
 int adc_last_value = 0;
-unsigned long millis = 0;
-int bpm = 0;
-unsigned long waitTime = 0;
-int averageBpm = 0;
-long lastHearbeatdetected = 0;
 
 void ADC_init() {
     ADMUX = 0;         // use #0 ADC

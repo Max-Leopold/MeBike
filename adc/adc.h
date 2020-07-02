@@ -6,5 +6,6 @@
 #define MEBIKE_ADC_H
 
 void ADC_init();
+int getAdcValue();
 
 #endif //MEBIKE_ADC_H
