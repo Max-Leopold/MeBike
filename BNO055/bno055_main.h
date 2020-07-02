@@ -12,6 +12,8 @@
 
 void bno_init(void);
 
+void bno055_main(bool debugMode);
+
 typedef struct bnodata{
 	char *Pitch;
 	
@@ -21,6 +23,6 @@ typedef struct bnodata{
 	char *temperature;
 } bnodata;
 
-void getBNOData(bnodata *bnodata, bool debug);
+void getBNOData(bnodata *bnodataPtr);
 
 #endif /* IBNO055_MAIN_H_ */

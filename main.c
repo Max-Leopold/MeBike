@@ -24,18 +24,19 @@ void init() {
 	gps_init();
 	bno_init();
 
-    sei();
+	sei();
 }
 
 
 int main() {
 
-    init();
+	init();
 
-    while (1) {
-        gps_main();
-		hall_main();
+	while (1) {
+		//gps_main();
+		//hall_main();
+		//bno055_main(debugMode);
 		bnodata newBnodata;
-		getBNOData(&newBnodata, debugMode);
-    }
+		getBNOData(&newBnodata);
+	}
 }

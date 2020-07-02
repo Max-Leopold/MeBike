@@ -41,8 +41,15 @@ bno_init(){
 	i2c_stop();
 }
 
-void getBNOData(BNODATA *bnodata, bool debug){
-	debugMode = debug;
+void bno055_main(bool debug){
+	//debugMode = debug;
+	//readPitch();
+	//readAcceleration();
+	//readTemp();
+}
+
+void getBNOData(BNODATA *bnodata){
+	readTemp(bnodata);
 	readPitch(bnodata);
 	readAcceleration(bnodata);
 }
@@ -84,12 +91,17 @@ void readAcceleration(BNODATA *bnodata){
 	sidew |= i2c_readAck() <<8;				//reg 0x29 Linear acceleration x axis MSB
 	
 	forw =  i2c_readAck();					//reg 0x2A Linear acceleration y axis LSB
-	forw |= i2c_readNak() << 8;				//reg 0x2B Linear acceleration y axis MSB
+	forw |= i2c_readAck() << 8;				//reg 0x2B Linear acceleration y axis MSB
+	
+	upw =  i2c_readAck();					//reg 0x2C Linear acceleration z axis LSB
+	upw |= i2c_readNak() << 8;				//reg 0x2D Linear acceleration z axis MSB
 	
 	i2c_stop();
 	
 	forwD =  (int) ((double) forw) / 9.81;	//convert raw sensor data to g (9.81 m/s^2) as double value.
 	sidewD = (int) ((double) sidew) /9.81;
+	upwD =   (((double)upw)/100.0)/9.81;
+	
 
 	int size = snprintf(NULL, 0, "%d", forwD);
 	char * forwardString = malloc(size + 1);
@@ -109,4 +121,19 @@ void readAcceleration(BNODATA *bnodata){
 		strcat(str_copy, bnodata->accelSideways);
 		serial_print_line(str_copy);
 	}
+}
+
+void readTemp(BNODATA *bnodata){
+	uint8_t temp;
+	i2c_start(DEVICE_ADDRESS+I2C_WRITE);				// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 0
+	i2c_write(0x34);									// write the register address. 0x1E as LSB address of Pitch data Register
+	i2c_start(DEVICE_ADDRESS+I2C_READ);					// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 1
+	
+								// read register and send ACK. Sensor will automatically send subsequent register 0x1F. Return value is LSB of pitch data and will be saved at bits 0 to 7
+	temp = i2c_readNak();							// read register and send NACK, so the sensor won't read the subsequent register. Shift result by 8 bits, so the MSB part is at bits 8 to 15
+	i2c_stop();
+	int size = snprintf(NULL, 0, "%d", temp);
+	char * tempString = malloc(size + 1);
+	sprintf(tempString, "%d", temp);
+	bnodata->temperature = tempString;
 }
