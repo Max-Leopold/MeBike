@@ -120,6 +120,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="adc\adc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="adc\adc.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="bluetooth\bluetooth.c">
       <SubType>compile</SubType>
     </Compile>
@@ -199,6 +205,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="adc\" />
     <Folder Include="bluetooth\" />
     <Folder Include="BNO055\" />
     <Folder Include="Debug\" />
