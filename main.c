@@ -12,6 +12,7 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
+bool debugMode = false;
 
 void init() {
 	initMillis();
@@ -34,7 +35,7 @@ int main() {
     while (1) {
         gps_main();
 		hall_main();
-		bno055_main();
+		bno055_main(debugMode);
 
     }
 }

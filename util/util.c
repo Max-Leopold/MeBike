@@ -21,3 +21,4 @@ char *convertIntToString(int number, int maxIntLength, char *buffer) {
 
     return buffer;
 }
+
