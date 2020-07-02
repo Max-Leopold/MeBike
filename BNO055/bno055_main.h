@@ -16,16 +16,9 @@ void bno055_main(void);
 struct BNODATA{
 	char *Pitch;
 	
-<<<<<<< HEAD
 	char *accelForwards;
 	char *accelSideways;
 	char *accelUpwards;
-=======
-struct BNOACCEL{
-	double forwards;
-	double sideways;
-	double upwards;	
->>>>>>> c98131b... changed values to g
 	};
 
 #endif /* IBNO055_MAIN_H_ */
