@@ -8,6 +8,8 @@
 #include "hall/hall_main.h"
 #include "bluetooth/bluetooth.h"
 #include "adc/adc.h"
+#include "pulsesensor/pulsesensor.h"
+#include "adc/adc.h"
 #include "util/Interrupt/timer.h"
 #include "BNO055/bno055_main.h"
 #include <util/delay.h>
@@ -34,10 +36,12 @@ int main() {
 
     init();
 
+    gps_init();
+
     while (1) {
         gps_main();
 		hall_main();
 		bno055_main();
-
+        pulsesensor_main();
     }
 }
