@@ -13,13 +13,15 @@
 #include "../adc/adc.h"
 #include "../util/Interrupt/timer.h"
 
-int bpmValues[3];
+int valueLength = 10;
+int bpmValues[valueLength];
 int average = 0;
-int sum = 0;
+int sum = 0, bpm = 0;
 int arrayLength = 0;
 struct pulse_value pulse;
 unsigned long startMillis;
 int waitTime = 60;
+long lastHearbeatdetected;
 
 
 void pulsesensor_init() {
@@ -28,9 +30,10 @@ void pulsesensor_init() {
 
 
 void pulsesensor_main() {
-    char bpmValue[3] = {0};
+    char bpmValue[3];
     convertIntToString(getBpm(), 3, bpmValue);
-    pulse = bpmValue;
+    pulse.pulse = bpmValue;
+	serial_print_line(bpmValue);
 
     /* if-statement in which we get the information if a heartbeat is detected or not
     ---> if yes: the value gets added to the bpmValues-array via the addValue-method
@@ -43,7 +46,7 @@ void pulsesensor_main() {
 
         if (heartbeatDetected(60, adc_current_value)) {
 
-            lastHearbeatdetected = millis;
+            lastHearbeatdetected = getMillis();
             bpm = 60000 / beatMsec;
 
             beatMsec = 0;
@@ -51,16 +54,12 @@ void pulsesensor_main() {
             addValue(bpm);
         } else {
 
-            if (millis - lastHearbeatdetected > 7000) {
+            if (getMillis() - lastHearbeatdetected > 7000) {
                 clearBpm();
             }
         }
         beatMsec += 60;
-
     }
-
-
-
 }
 
 //heartbeat-detection method inspired from the datasheet from joy-it
@@ -101,7 +100,6 @@ char heartbeatDetected(int delay, int ADCvalue) {
     return result;
 }
 
-
 int getBpm() {
     return average;
 }
@@ -111,19 +109,19 @@ void addValue(int bpm) {
     if (bpm < 40 || bpm > 200) {
         return;
     }
-    //increases the position of the values ??by one
-    for (int i = 2; i > 0; i--) {
+    //increases the position of the values by one
+    for (int i = valueLength - 1; i > 0; i--) {
         bpmValues[i] = bpmValues[i - 1];
     }
     bpmValues[0] = bpm; //put the latest value to position 0 of the array
 
     sum = 0;
 
-    //calculates the average of the 3 bpm values in the array
-    for (int i = 0; i < 3; i++) {
+    //calculates the average of the 10 bpm values in the array
+    for (int i = 0; i < valueLength; i++) {
         sum += bpmValues[i];
     }
-    if (arrayLength < 3) {
+    if (arrayLength < valueLength) {
         arrayLength++;
     }
     average = sum / arrayLength;
@@ -132,7 +130,7 @@ void addValue(int bpm) {
 
 //if no finger is on the sensor this method get called and sets all bpmValues to 0 - so if 0 is displayed no finger is on the sensor
 void clearBpm() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < valueLength - 1; i++) {
         bpmValues[i] = 0;
     }
     average = 0;
@@ -149,4 +147,3 @@ void interrupt_init()
     TIMSK2 |= (1 << OCIE2A);    //Set the ISR COMPA vect
     TCCR2B |= (1 << CS22) | (1 << CS21); // set prescaler to 256 and start the timer
 }
-

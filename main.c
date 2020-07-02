@@ -27,6 +27,8 @@ void init() {
 	bno_init();
 
     interrupt_init();
+	
+	pulsesensor_init();
 
     sei();
 }
@@ -40,8 +42,8 @@ int main() {
 
     while (1) {
         gps_main();
-		hall_main();
-		bno055_main();
+        hall_main();
+        bno055_main();
         pulsesensor_main();
     }
 }

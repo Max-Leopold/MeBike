@@ -5,6 +5,8 @@
 #ifndef MEBIKE_ADC_H
 #define MEBIKE_ADC_H
 
+int adc_current_value;
+
 void ADC_init();
 int getAdcValue();
 
