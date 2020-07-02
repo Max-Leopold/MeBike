@@ -2,6 +2,7 @@ package de.hhn.mebike.mebikeapp;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,10 +11,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
-public class CommunicateActivity extends AppCompatActivity {
+public class CommunicateActivity extends AppCompatActivity implements DataChangedListener {
 
-    private TextView connectionText, messagesView;
+    private TextView connectionText, speedText, distanceText, rpmText, pitchText, pulseText, temperatureText, calorieText, tripDurationText, gpsText;
     private Button connectButton;
+
+
+
 
     private CommunicateViewModel viewModel;
 
@@ -21,7 +25,7 @@ public class CommunicateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // Setup our activity
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_communicate);
+        setContentView(R.layout.main_display);
         // Enable the back button in the action bar if possible
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -29,6 +33,11 @@ public class CommunicateActivity extends AppCompatActivity {
 
         // Setup our ViewModel
         viewModel = ViewModelProviders.of(this).get(CommunicateViewModel.class);
+        viewModel.setDataChangedListener(this);
+
+        //get UI elements
+        rpmText = findViewById(R.id.rpmValue);
+        pulseText = findViewById(R.id.pulseValue);
 
         // This method return false if there is an error, so if it does, we should close.
         if (!viewModel.setupViewModel(getIntent().getStringExtra("device_name"), getIntent().getStringExtra("device_mac"))) {
@@ -38,19 +47,11 @@ public class CommunicateActivity extends AppCompatActivity {
 
         // Setup our Views
         connectionText = findViewById(R.id.communicate_connection_text);
-        messagesView = findViewById(R.id.communicate_messages);
-
         connectButton = findViewById(R.id.communicate_connect);
 
         // Start observing the data sent to us by the ViewModel
         viewModel.getConnectionStatus().observe(this, this::onConnectionStatus);
         viewModel.getDeviceName().observe(this, name -> setTitle(getString(R.string.device_name_format, name)));
-        viewModel.getMessages().observe(this, message -> {
-            if (TextUtils.isEmpty(message)) {
-                message = getString(R.string.no_messages);
-            }
-            messagesView.setText(message);
-        });
 
     }
 
@@ -100,4 +101,16 @@ public class CommunicateActivity extends AppCompatActivity {
         // Close the activity
         finish();
     }
+
+    @Override
+    public void update(ArduinoData data) {
+        updateUI(data);
+    }
+
+    private void updateUI(ArduinoData data){
+
+        pulseText.setText("" + data.getPulse());
+        rpmText.setText(""+ data.getRotationsPerMinute());
+    }
+
 }

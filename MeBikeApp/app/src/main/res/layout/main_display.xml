@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/communicate_connection_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:hint="@string/status_disconnected"
+        android:textSize="@dimen/text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/communicate_connect" />
+
+    <Button
+        android:id="@+id/communicate_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/connect"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/speedLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/speed_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/speedValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/speedLabel" />
+
+    <TextView
+        android:id="@+id/distanceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/distance_label"
+        app:layout_constraintEnd_toStartOf="@+id/pitchLabel"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/speedValue" />
+
+    <TextView
+        android:id="@+id/pitchLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="@string/pitch_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/distanceLabel"
+        app:layout_constraintTop_toTopOf="@+id/distanceLabel" />
+
+    <TextView
+        android:id="@+id/distanceValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/distanceLabel"
+        app:layout_constraintStart_toStartOf="@+id/distanceLabel"
+        app:layout_constraintTop_toBottomOf="@+id/distanceLabel" />
+
+    <TextView
+        android:id="@+id/pitchValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/pitchLabel"
+        app:layout_constraintStart_toStartOf="@+id/pitchLabel"
+        app:layout_constraintTop_toBottomOf="@+id/pitchLabel" />
+
+    <TextView
+        android:id="@+id/pulseLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/pulse_label"
+        app:layout_constraintEnd_toEndOf="@+id/distanceLabel"
+        app:layout_constraintStart_toStartOf="@+id/distanceLabel"
+        app:layout_constraintTop_toBottomOf="@+id/distanceValue" />
+
+    <TextView
+        android:id="@+id/pulseValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/pulseLabel"
+        app:layout_constraintStart_toStartOf="@+id/pulseLabel"
+        app:layout_constraintTop_toBottomOf="@+id/pulseLabel" />
+
+    <TextView
+        android:id="@+id/temperatureLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/temperature_label"
+        app:layout_constraintEnd_toEndOf="@+id/pitchLabel"
+        app:layout_constraintStart_toStartOf="@+id/pitchLabel"
+        app:layout_constraintTop_toTopOf="@+id/pulseLabel" />
+
+    <TextView
+        android:id="@+id/temperatureValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/temperatureLabel"
+        app:layout_constraintStart_toStartOf="@+id/temperatureLabel"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureLabel" />
+
+    <TextView
+        android:id="@+id/rpmLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/rpm_value"
+        app:layout_constraintEnd_toEndOf="@+id/pulseLabel"
+        app:layout_constraintStart_toStartOf="@+id/pulseLabel"
+        app:layout_constraintTop_toBottomOf="@+id/pulseValue" />
+
+    <TextView
+        android:id="@+id/rpmValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/rpmLabel"
+        app:layout_constraintStart_toStartOf="@+id/rpmLabel"
+        app:layout_constraintTop_toBottomOf="@+id/rpmLabel" />
+
+    <TextView
+        android:id="@+id/gpsLbabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/gps_label"
+        app:layout_constraintEnd_toEndOf="@+id/temperatureLabel"
+        app:layout_constraintStart_toStartOf="@+id/temperatureLabel"
+        app:layout_constraintTop_toBottomOf="@+id/pulseValue" />
+
+    <TextView
+        android:id="@+id/gpsValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/gpsLbabel"
+        app:layout_constraintStart_toStartOf="@+id/gpsLbabel"
+        app:layout_constraintTop_toBottomOf="@+id/gpsLbabel" />
+
+    <TextView
+        android:id="@+id/calorieLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/calorie_label"
+        app:layout_constraintEnd_toEndOf="@+id/rpmValue"
+        app:layout_constraintStart_toStartOf="@+id/rpmValue"
+        app:layout_constraintTop_toBottomOf="@+id/rpmValue" />
+
+    <TextView
+        android:id="@+id/calorieValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/calorieLabel"
+        app:layout_constraintStart_toStartOf="@+id/calorieLabel"
+        app:layout_constraintTop_toBottomOf="@+id/calorieLabel" />
+
+    <TextView
+        android:id="@+id/tripTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/trip_time_label"
+        app:layout_constraintEnd_toEndOf="@+id/gpsValue"
+        app:layout_constraintStart_toStartOf="@+id/gpsValue"
+        app:layout_constraintTop_toBottomOf="@+id/gpsValue" />
+
+    <TextView
+        android:id="@+id/tripDurationValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/tripTime"
+        app:layout_constraintStart_toStartOf="@+id/tripTime"
+        app:layout_constraintTop_toBottomOf="@+id/tripTime" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

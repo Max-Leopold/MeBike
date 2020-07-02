@@ -17,4 +17,13 @@
     <string name="bluetooth_unavailable">Connection Failed.</string>
     <string name="message_send_error">Error sending message!</string>
     <string name="you_sent">You</string>
+    <string name="speed_label">Speed</string>
+    <string name="distance_label">Trip Distance</string>
+    <string name="pitch_label">Pitch</string>
+    <string name="pulse_label">Pulse</string>
+    <string name="temperature_label">Temperature</string>
+    <string name="rpm_value">RPM</string>
+    <string name="gps_label">GPS</string>
+    <string name="calorie_label">Calories</string>
+    <string name="trip_time_label">Trip duration</string>
 </resources>

@@ -2,6 +2,7 @@ package de.hhn.mebike.mebikeapp;
 
 import android.app.Application;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
@@ -51,6 +52,14 @@ public class CommunicateViewModel extends AndroidViewModel {
     private boolean connectionAttemptedOrMade = false;
     // A variable to help us not setup twice
     private boolean viewModelSetup = false;
+
+
+    private ArduinoData arduinoData = new ArduinoData();
+    private DataChangedListener dataChangedListener;
+
+    public void setDataChangedListener(DataChangedListener dataChangedListener) {
+        this.dataChangedListener = dataChangedListener;
+    }
 
     // Called by the system, this is just a constructor that matches AndroidViewModel.
     public CommunicateViewModel(@NotNull Application application) {
@@ -127,7 +136,7 @@ public class CommunicateViewModel extends AndroidViewModel {
             // We have a device! Tell the activity we are connected.
             connectionStatusData.postValue(ConnectionStatus.CONNECTED);
             // Setup the listeners for the interface
-            this.deviceInterface.setListeners(this::onMessageReceived, this::onMessageSent, t -> toast(R.string.message_send_error));
+            this.deviceInterface.setListeners(this::onMessageReceived, this::onMessageSent, t -> Log.e("connection error", String.valueOf(t), t));
             // Tell the user we are connected.
             toast(R.string.connected);
             // Reset the conversation
@@ -142,8 +151,9 @@ public class CommunicateViewModel extends AndroidViewModel {
 
     // Adds a received message to the conversation
     private void onMessageReceived(String message) {
-        messages.append(deviceName).append(": ").append(message).append('\n');
-        messagesData.postValue(messages.toString());
+        Log.d("mess", message);
+        arduinoData.parseMesssage(message);
+        dataChangedListener.update(arduinoData);
     }
 
     // Adds a sent message to the conversation
