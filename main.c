@@ -13,11 +13,8 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-<<<<<<< HEAD
-bool debugMode = false;
+char debugMode = '0';
 
-=======
->>>>>>> f50383b... Added adc init
 void init() {
 	initMillis();
 
@@ -39,8 +36,8 @@ int main() {
     init();
 
     while (1) {
-        gps_main();
-		hall_main();
+        gps_main(debugMode);
+        hall_main();
 		bno055_main(debugMode);
 
     }

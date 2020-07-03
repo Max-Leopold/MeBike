@@ -14,11 +14,18 @@ char gpgga[] = {'$', 'G', 'P', 'G', 'G', 'A'};
 char gps_string_received;
 char delimiter[] = ",";
 
+char debugMode;
+
+char *gmtTime;
+char *latitude;
+char *longitude;
+
 void gps_init() {
     softuart_init();
 }
 
-void gps_main() {
+void gps_main(char debug) {
+    debugMode = debug;
 
     if (softuart_kbhit()) {
         char c = softuart_getchar();
@@ -27,16 +34,19 @@ void gps_main() {
     if (gps_string_received) {
         gps_string_received = 0;
         gps_ind = 0;
-        struct gps_coordinates gpsCoordinates = create_gps_coordinates();
-        char str_copy[100];
-        strcpy(str_copy, "Latitude: ");
-        strcat(str_copy, gpsCoordinates.latitude);
-        strcat(str_copy, ", Longitude: ");
-        strcat(str_copy, gpsCoordinates.longitude);
-        strcat(str_copy, ", GMT Time: ");
-        strcat(str_copy, gpsCoordinates.gmt_time);
-        //serial_print_line(str_copy);
-		bluetooth_send_gps(gpsCoordinates);
+        create_gps_coordinates();
+        if (debugMode) {
+            char str_copy[100];
+            strncpy(str_copy, "Latitude: ", strlen("Latitude: "));
+            strncat(str_copy, latitude, strlen(latitude));
+            strncat(str_copy, ", Longitude: ", strlen(", Longitude: "));
+            strncat(str_copy, longitude, strlen(longitude));
+            strncat(str_copy, ", GMT Time: ", strlen(", GMT Time: "));
+            strncat(str_copy, gmtTime, strlen(gmtTime));
+            serial_print_line(str_copy);
+        }
+
+        //TODO send bluetooth data
     }
 }
 
@@ -55,23 +65,20 @@ void check_for_coordinates(char c) {
 
 }
 
-struct gps_coordinates create_gps_coordinates() {
+void create_gps_coordinates() {
     char *ptr;
     ptr = strtok(gps_buf, delimiter);
-    struct gps_coordinates gpsCoordinates;
 
     for (int i = 0; i < 5; ++i) {
         if (i == 1) {
-            gpsCoordinates.gmt_time = ptr;
+            gmtTime = ptr;
         }
         if (i == 2) {
-            gpsCoordinates.latitude = ptr;
+            latitude = ptr;
         }
         if (i == 4) {
-            gpsCoordinates.longitude = ptr;
+            longitude = ptr;
         }
         ptr = strtok(NULL, delimiter);
     }
-
-    return gpsCoordinates;
 }
