@@ -18,14 +18,13 @@
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
-#include <stdbool.h>
 #include <stdio.h>
 
 #define DEVICE_ADDRESS (0x28 << 1)
 
 struct BNODATA bnodata;
 
-bool debugMode;
+char debugMode;
 
 bno_init(){
 
@@ -40,10 +39,10 @@ bno_init(){
 	i2c_stop();
 }
 
-void bno055_main(bool debug){
-	debugMode = debug;
-	readPitch();
-	readAcceleration();
+void bno055_main(char debug) {
+    debugMode = debug;
+    readPitch();
+    readAcceleration();
 }
 
 //Method to read the current pitch data of the BNO055 and store it in the BNODATA struct
