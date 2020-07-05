@@ -33,10 +33,9 @@ int main() {
 	init();
 
 	while (1) {
-		//gps_main();
-		//hall_main();
-		//bno055_main(debugMode);
-		bnodata newBnodata;
-		getBNOData(&newBnodata);
+		gps_main();
+		hall_main();
+		bno055_main(debugMode);
+
 	}
 }

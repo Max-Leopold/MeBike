@@ -26,7 +26,10 @@
 
 bool debugMode;
 
-typedef struct bnodata BNODATA; 
+char *temperature;
+char *accelForward;
+char *accelSideways;
+char *pitch;
 
 bno_init(){
 
@@ -42,20 +45,15 @@ bno_init(){
 }
 
 void bno055_main(bool debug){
-	//debugMode = debug;
-	//readPitch();
-	//readAcceleration();
-	//readTemp();
+	debugMode = debug;
+	readPitch();
+	readAcceleration();
+	readTemp();
 }
 
-void getBNOData(BNODATA *bnodata){
-	readTemp(bnodata);
-	readPitch(bnodata);
-	readAcceleration(bnodata);
-}
 
 //Method to read the current pitch data of the BNO055 and store it in the BNODATA struct
-void readPitch(BNODATA *bnodata){
+void readPitch(){
 	int pitch;
 	
 	i2c_start(DEVICE_ADDRESS+I2C_WRITE);				// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 0
@@ -68,19 +66,19 @@ void readPitch(BNODATA *bnodata){
 
 	pitch = (pitch/ 16.0);
 
-	int size = snprintf(NULL, 0, "%d", pitch);
-	char * pitchString = malloc(size + 1);
-	sprintf(pitchString, "%d", pitch);
+	int size = snprintf(NULL, 0, "%d", pitch);			// calculate needed char array length to store the value as String
+	char * pitchString = malloc(size + 1);				// allocate the needed space for the string on the heap
+	sprintf(pitchString, "%d", pitch);					// convert the value to a string
 
-	bnodata->Pitch = pitchString;
-	
+	pitch = &pitchString;								// save string in global variable
+		
 	if(debugMode){
 		serial_print_line(pitchString);
 	}
 }
 
 // Read all acceleration registers from the sensor. Starting from register 0x28 up to 0x2D. Values in g.
-void readAcceleration(BNODATA *bnodata){
+void readAcceleration(){
 	i2c_start(DEVICE_ADDRESS+I2C_WRITE);
 	i2c_write(0x28);
 	i2c_start(DEVICE_ADDRESS+I2C_READ);
@@ -92,48 +90,46 @@ void readAcceleration(BNODATA *bnodata){
 	
 	forw =  i2c_readAck();					//reg 0x2A Linear acceleration y axis LSB
 	forw |= i2c_readAck() << 8;				//reg 0x2B Linear acceleration y axis MSB
-	
-	upw =  i2c_readAck();					//reg 0x2C Linear acceleration z axis LSB
-	upw |= i2c_readNak() << 8;				//reg 0x2D Linear acceleration z axis MSB
+
 	
 	i2c_stop();
 	
 	forwD =  (int) ((double) forw) / 9.81;	//convert raw sensor data to g (9.81 m/s^2) as double value.
 	sidewD = (int) ((double) sidew) /9.81;
-	upwD =   (((double)upw)/100.0)/9.81;
 	
 
-	int size = snprintf(NULL, 0, "%d", forwD);
-	char * forwardString = malloc(size + 1);
-	sprintf(forwardString, "%d", forwD);
-	bnodata->accelForwards = forwardString;
+	int size = snprintf(NULL, 0, "%d", forwD);	// calculate needed char array length to store the value as String
+	char * forwardString = malloc(size + 1);	// allocate the needed space for the string on the heap
+	sprintf(forwardString, "%d", forwD);		// convert the value to a string
+	accelForward = &forwardString;				// save string in global variable
 	
 	size = snprintf(NULL, 0, "%d", sidewD);
 	char * sideString = malloc(size + 1);
 	sprintf(sideString, "%d", sidewD);
-	bnodata->accelSideways = sideString;
+	accelSideways = &sideString;
 
     if(debugMode){
 		char str_copy[100];
-		strcpy(str_copy, "forward: ");
-		strcat(str_copy, bnodata->accelForwards);
-		strcat(str_copy, ", sideways: ");
-		strcat(str_copy, bnodata->accelSideways);
+		strncpy(str_copy, "forward: ");
+		strncat(str_copy, accelForward);
+		strncat(str_copy, ", sideways: ");
+		strncat(str_copy, accelSideways);
 		serial_print_line(str_copy);
 	}
 }
 
-void readTemp(BNODATA *bnodata){
+void readTemp(){
 	uint8_t temp;
 	i2c_start(DEVICE_ADDRESS+I2C_WRITE);				// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 0
-	i2c_write(0x34);									// write the register address. 0x1E as LSB address of Pitch data Register
+	i2c_write(0x34);									// write the register address. 0x34 as address of temperature Register
 	i2c_start(DEVICE_ADDRESS+I2C_READ);					// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 1
 	
-								// read register and send ACK. Sensor will automatically send subsequent register 0x1F. Return value is LSB of pitch data and will be saved at bits 0 to 7
-	temp = i2c_readNak();							// read register and send NACK, so the sensor won't read the subsequent register. Shift result by 8 bits, so the MSB part is at bits 8 to 15
+	temp = i2c_readNak();								// read register and send NACK, so the sensor won't read the subsequent register
 	i2c_stop();
-	int size = snprintf(NULL, 0, "%d", temp);
-	char * tempString = malloc(size + 1);
-	sprintf(tempString, "%d", temp);
-	bnodata->temperature = tempString;
+	
+	int size = snprintf(NULL, 0, "%d", temp);           // calculate needed char array length to store the value as String   
+	char * tempString = malloc(size + 1);				// allocate the needed space for the string on the heap
+	sprintf(tempString, "%d", temp);					// convert the value to a string
+	temp = &tempString;									// save string in global variable
+		
 }
