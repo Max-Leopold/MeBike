@@ -10,7 +10,8 @@
 #define IBNO055_MAIN_H_
 
 void bno_init(void);
-
+void readPitch(void);
+void readAcceleration(void);
 void bno055_main(char debugMode);
 
 #endif /* IBNO055_MAIN_H_ */

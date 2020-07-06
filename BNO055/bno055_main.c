@@ -30,7 +30,7 @@ char *accelForward;
 char *accelSideways;
 char *pitch;
 
-bno_init(){
+void bno_init(){
 
     i2c_init();									   // init I2C interface
 	_delay_ms(1000);							   // important, so the sensor has enough time to boot properly, before setting the operation mode 
@@ -118,7 +118,7 @@ void readAcceleration(){
 }
 
 void readTemp(){
-	uint8_t temp;
+	unsigned char temp;
 	i2c_start(DEVICE_ADDRESS+I2C_WRITE);				// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 0
 	i2c_write(0x34);									// write the register address. 0x34 as address of temperature Register
 	i2c_start(DEVICE_ADDRESS+I2C_READ);					// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 1
@@ -129,6 +129,6 @@ void readTemp(){
 	int size = snprintf(NULL, 0, "%d", temp);           // calculate needed char array length to store the value as String   
 	char * tempString = malloc(size + 1);				// allocate the needed space for the string on the heap
 	sprintf(tempString, "%d", temp);					// convert the value to a string
-	temp = &tempString;									// save string in global variable
+	temp =  &tempString;									// save string in global variable
 		
 }
