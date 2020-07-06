@@ -15,7 +15,8 @@
 int changesSinceReset;
 char lastSignal;
 unsigned long startMillis;
-struct HALLDATA hallStruct;
+
+char *rotationsPerMinute;
 
 void hall_init(){
 	startMillis = getMillis();
@@ -45,8 +46,9 @@ void calcHallRoation(){
 		//then divided by 12 because the wheel has 12 magnets => each signal is 1/12th of a rotation
 		convertIntToString((changesSinceReset*5), 4, signalBuffer);
 		
-		hallStruct.rpm = signalBuffer;
-
+		//here is the result 
+		rotationsPerMinute = signalBuffer;	
+		
 		changesSinceReset = 0;
 	}
 }
