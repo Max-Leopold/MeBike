@@ -13,11 +13,4 @@ void bno_init(void);
 
 void bno055_main(char debugMode);
 
-struct BNODATA{
-	char *Pitch;
-	
-	char *accelForwards;
-	char *accelSideways;
-	};
-
 #endif /* IBNO055_MAIN_H_ */

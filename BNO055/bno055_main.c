@@ -19,12 +19,16 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define DEVICE_ADDRESS (0x28 << 1)
 
-struct BNODATA bnodata;
-
 char debugMode;
+
+char *temperature;
+char *accelForward;
+char *accelSideways;
+char *pitch;
 
 bno_init(){
 
@@ -39,11 +43,13 @@ bno_init(){
 	i2c_stop();
 }
 
+
 void bno055_main(char debug) {
     debugMode = debug;
     readPitch();
     readAcceleration();
 }
+
 
 //Method to read the current pitch data of the BNO055 and store it in the BNODATA struct
 void readPitch(){
@@ -59,12 +65,14 @@ void readPitch(){
 
 	pitch = (pitch/ 16.0);
 
-	char str[4];
-	sprintf(str, "%d", pitch);
-	bnodata.Pitch = str;
-	
+	int size = snprintf(NULL, 0, "%d", pitch);			// calculate needed char array length to store the value as String
+	char * pitchString = malloc(size + 1);				// allocate the needed space for the string on the heap
+	sprintf(pitchString, "%d", pitch);					// convert the value to a string
+
+	pitch = &pitchString;								// save string in global variable
+		
 	if(debugMode){
-		serial_print_line(str);
+		serial_print_line(pitchString);
 	}
 }
 
@@ -74,42 +82,53 @@ void readAcceleration(){
 	i2c_write(0x28);
 	i2c_start(DEVICE_ADDRESS+I2C_READ);
 	int forw, sidew, upw;
-	double forwD, sidewD, upwD;
+	int forwD, sidewD, upwD;
 	
 	sidew =  i2c_readAck();					//reg 0x28 Linear acceleration x axis LSB
 	sidew |= i2c_readAck() <<8;				//reg 0x29 Linear acceleration x axis MSB
 	
 	forw =  i2c_readAck();					//reg 0x2A Linear acceleration y axis LSB
 	forw |= i2c_readAck() << 8;				//reg 0x2B Linear acceleration y axis MSB
-	
-	upw =  i2c_readAck();					//reg 0x2C Linear acceleration z axis LSB
-	upw |= i2c_readNak() << 8;				//reg 0x2D Linear acceleration z axis MSB
+
 	
 	i2c_stop();
 	
-	forwD =  (((double)forw)/100.0)/9.81;	//convert raw sensor data to g (9.81 m/s^2) as double value.
-	sidewD = (((double)sidew)/100.0)/9.81;
-	upwD =   (((double)upw)/100.0)/9.81;
+	forwD =  (int) ((double) forw) / 9.81;	//convert raw sensor data to g (9.81 m/s^2) as double value.
+	sidewD = (int) ((double) sidew) /9.81;
 	
-	char str[10];
 
-	//Convert all three linear accelerations in strings and save them in the struct
-	dtostrf(forwD, 3, 2, &str);
-	bnodata.accelForwards = str;
+	int size = snprintf(NULL, 0, "%d", forwD);	// calculate needed char array length to store the value as String
+	char * forwardString = malloc(size + 1);	// allocate the needed space for the string on the heap
+	sprintf(forwardString, "%d", forwD);		// convert the value to a string
+	accelForward = &forwardString;				// save string in global variable
 	
-	dtostrf(sidewD, 3, 2, str);
-	bnodata.accelSideways = str;
+	size = snprintf(NULL, 0, "%d", sidewD);
+	char * sideString = malloc(size + 1);
+	sprintf(sideString, "%d", sidewD);
+	accelSideways = &sideString;
 
     if(debugMode){
-	char str_copy[100];
-	strcpy(str_copy, "forward: ");
-	strcat(str_copy, bnodata.accelForwards);
-	strcat(str_copy, ", sideways: ");
-	strcat(str_copy, bnodata.accelSideways);
-	serial_print_line(str_copy);
-    }
+		char str_copy[100];
+		strncpy(str_copy, "forward: ", strlen("forward: "));
+		strncat(str_copy, accelForward, strlen(accelForward));
+		strncat(str_copy, ", sideways: ", strlen(", sideways: "));
+		strncat(str_copy, accelSideways, strlen(accelSideways));
+		serial_print_line(str_copy);
+	}
 }
 
-
-
-
+void readTemp(){
+	uint8_t temp;
+	i2c_start(DEVICE_ADDRESS+I2C_WRITE);				// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 0
+	i2c_write(0x34);									// write the register address. 0x34 as address of temperature Register
+	i2c_start(DEVICE_ADDRESS+I2C_READ);					// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 1
+	
+	temp = i2c_readNak();								// read register and send NACK, so the sensor won't read the subsequent register
+	i2c_stop();
+	
+	int size = snprintf(NULL, 0, "%d", temp);           // calculate needed char array length to store the value as String   
+	char * tempString = malloc(size + 1);				// allocate the needed space for the string on the heap
+	sprintf(tempString, "%d", temp);					// convert the value to a string
+	temp = &tempString;									// save string in global variable
+		
+}
