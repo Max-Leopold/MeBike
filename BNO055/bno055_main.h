@@ -5,13 +5,12 @@
  *  Author: nicok
  */ 
 #include <stdint.h>
-#include <stdbool.h>
 
 #ifndef IBNO055_MAIN_H_
 #define IBNO055_MAIN_H_
 
 void bno_init(void);
 
-void bno055_main(bool debugMode);
+void bno055_main(char debugMode);
 
 #endif /* IBNO055_MAIN_H_ */

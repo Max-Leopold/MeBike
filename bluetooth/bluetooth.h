@@ -23,7 +23,7 @@ void bluetooth_init(void);
 /************************************************************************/
 /* Expects the gps coordinates struct                                   */
 /************************************************************************/
-void bluetooth_send_gps(struct gps_coordinates);
+void bluetooth_send_gps(void);
 
 /************************************************************************/
 /* Expects the temperature coordinates struct                           */

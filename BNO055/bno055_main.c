@@ -18,13 +18,12 @@
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define DEVICE_ADDRESS (0x28 << 1)
 
-bool debugMode;
+char debugMode;
 
 char *temperature;
 char *accelForward;
@@ -44,11 +43,11 @@ bno_init(){
 	i2c_stop();
 }
 
-void bno055_main(bool debug){
-	debugMode = debug;
-	readPitch();
-	readAcceleration();
-	readTemp();
+
+void bno055_main(char debug) {
+    debugMode = debug;
+    readPitch();
+    readAcceleration();
 }
 
 
@@ -110,10 +109,10 @@ void readAcceleration(){
 
     if(debugMode){
 		char str_copy[100];
-		strncpy(str_copy, "forward: ");
-		strncat(str_copy, accelForward);
-		strncat(str_copy, ", sideways: ");
-		strncat(str_copy, accelSideways);
+		strncpy(str_copy, "forward: ", strlen("forward: "));
+		strncat(str_copy, accelForward, strlen(accelForward));
+		strncat(str_copy, ", sideways: ", strlen(", sideways: "));
+		strncat(str_copy, accelSideways, strlen(accelSideways));
 		serial_print_line(str_copy);
 	}
 }
