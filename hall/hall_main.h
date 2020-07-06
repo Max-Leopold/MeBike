@@ -12,8 +12,4 @@ void hall_init(void);
 void hall_main(void);
 void calcHallRoation(void);
 
-struct HALLDATA{
-	char *rpm;
-	};
-
 #endif //ME_BIKE_HALL_MAIN
