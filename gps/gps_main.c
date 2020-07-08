@@ -35,7 +35,7 @@ void gps_main(char debug) {
         gps_string_received = 0;
         gps_ind = 0;
         create_gps_coordinates();
-        if (debugMode) {
+        if (debugMode == '1') {
             char str_copy[100];
             strncpy(str_copy, "Latitude: ", strlen("Latitude: "));
             strncat(str_copy, latitude, strlen(latitude));
@@ -46,7 +46,7 @@ void gps_main(char debug) {
             serial_print_line(str_copy);
         }
 
-        //TODO send bluetooth data
+		bluetooth_send_gps(gmtTime, latitude, longitude);
     }
 }
 

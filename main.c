@@ -27,7 +27,6 @@ void init() {
 	bno_init();
 	ADC_init();
 	pulsesensor_init();
-
     sei();
 }
 
@@ -35,12 +34,12 @@ void init() {
 int main() {
 
     init();
+    serial_print_line("INIT");
 
     while (1) {
-        gps_main();
-		hall_main();
-		pulsesensor_main();
-		bno055_main(debugMode);
-
+        gps_main(debugMode);
+        hall_main();
+        pulsesensor_main();
+        bno055_main(debugMode);
 	}
 }

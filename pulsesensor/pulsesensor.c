@@ -13,24 +13,28 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 
-int valueLength = 10;
-int bpmValues[valueLength];
+int valueLength = 8;
+int bpmValues[8];
 int average = 0;
 int sum = 0, bpm = 0;
 int arrayLength = 0;
 int waitTime = 60;
 unsigned long startMillis;
+unsigned long sendStartMillis;
 long lastHearbeatdetected;
+
 
 
 void pulsesensor_init() {
     startMillis = getMillis();
+	sendStartMillis = getMillis();
 }
 
 
 void pulsesensor_main() {
     char bpmValue[3];
-    sprintf(getBpm(), 3, bpmValue);
+    sprintf(bpmValue, "%d", getBpm());
+	//convertIntToString(getBpm(), 3, bpmValue);
 
     /* if-statement in which we get the information if a heartbeat is detected or not
     ---> if yes: the value gets added to the bpmValues-array via the addValue-method
@@ -41,7 +45,7 @@ void pulsesensor_main() {
         startMillis = getMillis();
         static int beatMsec = 0;
 
-        if (heartbeatDetected(60, adc_current_value)) {
+        if (heartbeatDetected(waitTime, get_adc_current())) {
 
             lastHearbeatdetected = getMillis();
             bpm = 60000 / beatMsec;
@@ -50,13 +54,16 @@ void pulsesensor_main() {
 
             addValue(bpm);
         } else {
-
             if (getMillis() - lastHearbeatdetected > 7000) {
-                clearBpm();
-            }
+	            clearBpm();
+	        }
         }
-        beatMsec += 60;
+        beatMsec += waitTime;
     }
+	if(getMillis() - sendStartMillis > 1000){
+		sendStartMillis = getMillis();
+		bluetooth_send_pulse(bpmValue);
+	}
 }
 
 //heartbeat-detection method inspired from the datasheet from joy-it

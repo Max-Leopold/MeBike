@@ -4,6 +4,9 @@
 
 #include "adc.h"
 #include <avr/io.h>
+#include <avr/interrupt.h>
+
+int adc_current_value = 0;
 
 void ADC_init()
 {
@@ -17,4 +20,17 @@ void ADC_init()
     ADCSRA |= (1 << ADEN);    // Enable the ADC
     ADCSRA |= (1 << ADIE);    // Enable Interrupts
     ADCSRA |= (1 << ADSC);    // Start the ADC conversion
+}
+
+
+int get_adc_current(){
+	return adc_current_value;
+}
+
+ISR (ADC_vect)
+{
+	int ADCval = ADCL;
+	ADCval = (ADCH << 8) + ADCval;
+
+	adc_current_value = ADCval;
 }

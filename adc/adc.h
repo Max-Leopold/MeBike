@@ -6,6 +6,7 @@
 #define MEBIKE_ADC_H
 
 void ADC_init();
+int get_adc_current();
 void interrupt_init();
 
 #endif //MEBIKE_ADC_H
