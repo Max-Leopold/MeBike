@@ -10,7 +10,10 @@
 #define IBNO055_MAIN_H_
 
 void bno_init(void);
-
+void readPitch(void);
+void readTemp(void);
+void readAcceleration(void);
 void bno055_main(char debugMode);
+void sendBluetooth(void);
 
 #endif /* IBNO055_MAIN_H_ */

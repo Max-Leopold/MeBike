@@ -8,18 +8,21 @@
 
 #include "hall_main.h"
 #include "adcHall/adcHall.h"
+#include <stdio.h>
+#include <string.h>
 #include "../uart/serial.h"
 #include "../util/util.h"
 #include "../util/Interrupt/timer.h"
+#include "../bluetooth/bluetooth.h"
 
 int changesSinceReset;
 char lastSignal;
-unsigned long startMillis;
+unsigned long hallStartMillis;
 
 char *rotationsPerMinute;
 
 void hall_init(){
-	startMillis = getMillis();
+	hallStartMillis = getMillis();
 }
 
 void hall_main() {
@@ -38,17 +41,21 @@ void hall_main() {
 }
 
 void calcHallRoation(){
-	int millisElapsed = getMillis() - startMillis;
+	int millisElapsed = getMillis() - hallStartMillis;	
 	if(millisElapsed > 1000){
-		startMillis = getMillis();
+		hallStartMillis = getMillis();
 		char signalBuffer[4];
 		//changesSinceReset*5 because its called every second => times 60
 		//then divided by 12 because the wheel has 12 magnets => each signal is 1/12th of a rotation
-		convertIntToString((changesSinceReset*5), 4, signalBuffer);
+		//convertIntToString((changesSinceReset*5), 4, signalBuffer);
+		sprintf(signalBuffer, "%d", (changesSinceReset*5));
 		
 		//here is the result 
-		rotationsPerMinute = signalBuffer;	
+		rotationsPerMinute = signalBuffer;
 		
 		changesSinceReset = 0;
+			
+		bluetooth_send_rpm(rotationsPerMinute);
 	}
+	
 }

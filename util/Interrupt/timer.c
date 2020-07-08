@@ -8,7 +8,7 @@
 #include "timer.h"
 #include <avr/interrupt.h>
 
-unsigned long millis = 0;
+static unsigned long millis = 0;
 
 void initMillis(){
 	// Enable timer 2 to count the millis

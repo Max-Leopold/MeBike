@@ -168,6 +168,12 @@
     <Compile Include="main.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="pulsesensor\pulsesensor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pulsesensor\pulsesensor.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="uart\serial.c">
       <SubType>compile</SubType>
     </Compile>
@@ -214,6 +220,8 @@
     <Folder Include="hall" />
     <Folder Include="hall\adcHall" />
     <Folder Include="i2cmaster\" />
+    <Folder Include="pulsesensor\" />
+    <Folder Include="pulsesensor\" />
     <Folder Include="uart\" />
     <Folder Include="util\" />
     <Folder Include="util\Interrupt\" />

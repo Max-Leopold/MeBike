@@ -14,23 +14,38 @@
 #include <stdio.h>
 
 int valueLength = 10;
-int bpmValues[valueLength];
+int bpmValues[10];
 int average = 0;
 int sum = 0, bpm = 0;
 int arrayLength = 0;
 int waitTime = 60;
 unsigned long startMillis;
+unsigned long sendStartMillis;
 long lastHearbeatdetected;
+
 
 
 void pulsesensor_init() {
     startMillis = getMillis();
+	sendStartMillis = getMillis();
+	//
+	//ADMUX = 0;					// use #0 ADC
+	//ADMUX |= (1 << REFS0);		// use AVcc as the reference
+	//ADMUX &= ~(1 << ADLAR);		// clear for 10 bit resolution
+//
+	//ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // 128 prescale for 8Mhz
+	//ADCSRA |= (1 << ADATE);		// Set ADC Auto Trigger Enable
+	//ADCSRB = 0;					// 0 for free running mode
+	//ADCSRA |= (1 << ADEN);		// Enable the ADC
+	//ADCSRA |= (1 << ADIE);		// Enable Interrupts
+	//ADCSRA |= (1 << ADSC);		// Start the ADC conversion
 }
 
 
 void pulsesensor_main() {
     char bpmValue[3];
-    sprintf(getBpm(), 3, bpmValue);
+    sprintf(bpmValue, "%d", getBpm());
+	//convertIntToString(getBpm(), 3, bpmValue);
 
     /* if-statement in which we get the information if a heartbeat is detected or not
     ---> if yes: the value gets added to the bpmValues-array via the addValue-method
@@ -41,7 +56,7 @@ void pulsesensor_main() {
         startMillis = getMillis();
         static int beatMsec = 0;
 
-        if (heartbeatDetected(60, adc_current_value)) {
+        if (heartbeatDetected(60, get_adc_current())) {
 
             lastHearbeatdetected = getMillis();
             bpm = 60000 / beatMsec;
@@ -50,13 +65,16 @@ void pulsesensor_main() {
 
             addValue(bpm);
         } else {
-
             if (getMillis() - lastHearbeatdetected > 7000) {
-                clearBpm();
-            }
+	            clearBpm();
+	        }
         }
         beatMsec += 60;
     }
+	if(getMillis() - sendStartMillis > 1000){
+		sendStartMillis = getMillis();
+		bluetooth_send_pulse(bpmValue);
+	}
 }
 
 //heartbeat-detection method inspired from the datasheet from joy-it

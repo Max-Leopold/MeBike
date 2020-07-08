@@ -23,22 +23,27 @@ void bluetooth_init(void);
 /************************************************************************/
 /* Expects the gps coordinates struct                                   */
 /************************************************************************/
-void bluetooth_send_gps(void);
+void bluetooth_send_gps(char *gmt_time, char *latitude, char *longitude);
 
 /************************************************************************/
 /* Expects the temperature coordinates struct                           */
 /************************************************************************/
-void bluetooth_send_temperature(void);
+void bluetooth_send_temperature(char *temperature);
 
 /************************************************************************/
 /* Expects the pulse coordinates struct                                 */
 /************************************************************************/
-void bluetooth_send_pulse(void);
+void bluetooth_send_pulse(char *pulse);
 
 /************************************************************************/
 /* Expects the gyro coordinates struct                                  */
 /************************************************************************/
-void bluetooth_send_gyro(void);
+void bluetooth_send_gyro(char *accFwd, char *accSd, char *pitch);
+
+/************************************************************************/
+/* Expects the rpm values			                                    */
+/************************************************************************/
+void bluetooth_send_rpm(char *rpm);
 
 
 
