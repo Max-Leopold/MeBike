@@ -21,16 +21,17 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <avr/interrupt.h>
 
 #define DEVICE_ADDRESS (0x28 << 1)
 
 char debugMode;
 long bnoStartMillis;
 
-char *temperature;
-char *accelForward;
-char *accelSideways;
-char *pitch;
+char temperature[4];
+char accelForward[4];
+char accelSideways[4];
+char pitch[4];
 
 void bno_init(){
 
@@ -49,7 +50,6 @@ void bno_init(){
 
 void bno055_main(char debug) {
     debugMode = debug;
-	cli();
     readPitch();
     readAcceleration();
 	readTemp();
@@ -59,7 +59,8 @@ void bno055_main(char debug) {
 
 //Method to read the current pitch data of the BNO055 and store it in the BNODATA struct
 void readPitch(){
-	uint16_t _pitch;
+	int _pitch;
+	
 	
 	i2c_start(DEVICE_ADDRESS+I2C_WRITE);				// send start condition Sensor Address with R/W Bit (LSB, Bit 8) = 0
 	i2c_write(0x1E);									// write the register address. 0x1E as LSB address of Pitch data Register
@@ -91,31 +92,36 @@ void readAcceleration(){
 	i2c_start(DEVICE_ADDRESS+I2C_READ);
 	int forw, sidew, upw;
 	int forwD, sidewD, upwD;
-	
+	//serial_print_line("5");
 	sidew =  i2c_readAck();					//reg 0x28 Linear acceleration x axis LSB
 	sidew |= i2c_readAck() <<8;				//reg 0x29 Linear acceleration x axis MSB
+	//serial_print_line("6");
 	
 	forw =  i2c_readAck();					//reg 0x2A Linear acceleration y axis LSB
 	forw |= i2c_readNak() << 8;				//reg 0x2B Linear acceleration y axis MSB
-
+	//serial_print_line("7");
 	i2c_stop();
-	
+	//serial_print_line("8");
 	forwD =  (int) ((double) forw) / 9.81;	//convert raw sensor data to g (9.81 m/s^2) as double value.
 	sidewD = (int) ((double) sidew) /9.81;
 	
-
+	//serial_print_line("9");
 	//int size = snprintf(NULL, 0, "%d", forwD);	// calculate needed char array length to store the value as String
 	//char * forwardString = malloc(size + 1);	// allocate the needed space for the string on the heap
+	
 	sprintf(accelForward, "%d", forwD);		// convert the value to a string
+	
 	//accelForward = &forwardString;				// save string in global variable
 	//free(forwardString);
-	
+	//serial_print_line("10");
 	//size = snprintf(NULL, 0, "%d", sidewD);
 	//char * sideString = malloc(size + 1);
-	sprintf(accelSideways, "%d", sidewD);
+	
+    sprintf(accelSideways, "%d", sidewD);
+	
 	//accelSideways = &sideString;
 	//free(sideString);
-
+	//serial_print_line("11");
     if(debugMode == '1'){
 		char str_copy[100];
 		strncpy(str_copy, "forward: ", strlen("forward: "));
@@ -146,6 +152,6 @@ void sendBluetooth(){
 	if(getMillis() - bnoStartMillis > 1000){
 		bnoStartMillis = getMillis();
 		bluetooth_send_gyro(accelForward, accelSideways, pitch);
-		//bluetooth_send_temperature(temperature);
+		bluetooth_send_temperature(temperature);
 	}
 }

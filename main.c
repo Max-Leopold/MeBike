@@ -22,10 +22,10 @@ void init() {
 	// Bluetooth uses the serial class internally, so it does not need to be initialized here
 	serial_init();
 	bluetooth_init();
-	//hall_init();
-	//gps_init();
-	//bno_init();
-	//ADC_init();
+	hall_init();
+	gps_init();
+	bno_init();
+	ADC_init();
 	pulsesensor_init();
     sei();
 }
@@ -37,9 +37,9 @@ int main() {
     serial_print_line("INIT");
 
     while (1) {
-        //gps_main(debugMode);
-		//hall_main();
+        gps_main(debugMode);
+        //hall_main();
 		//pulsesensor_main();
-		bno055_main(debugMode);
+		//bno055_main(debugMode);
 	}
 }

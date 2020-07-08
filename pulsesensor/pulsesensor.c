@@ -13,8 +13,8 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 
-int valueLength = 10;
-int bpmValues[10];
+int valueLength = 8;
+int bpmValues[8];
 int average = 0;
 int sum = 0, bpm = 0;
 int arrayLength = 0;
@@ -56,7 +56,7 @@ void pulsesensor_main() {
         startMillis = getMillis();
         static int beatMsec = 0;
 
-        if (heartbeatDetected(60, get_adc_current())) {
+        if (heartbeatDetected(waitTime, get_adc_current())) {
 
             lastHearbeatdetected = getMillis();
             bpm = 60000 / beatMsec;
@@ -69,7 +69,7 @@ void pulsesensor_main() {
 	            clearBpm();
 	        }
         }
-        beatMsec += 60;
+        beatMsec += waitTime;
     }
 	if(getMillis() - sendStartMillis > 1000){
 		sendStartMillis = getMillis();
