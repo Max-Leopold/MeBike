@@ -38,8 +38,8 @@ int main() {
 
     while (1) {
         gps_main(debugMode);
-        //hall_main();
-		//pulsesensor_main();
-		//bno055_main(debugMode);
+        hall_main();
+        pulsesensor_main();
+        bno055_main(debugMode);
 	}
 }

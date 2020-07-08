@@ -30,10 +30,8 @@ void gps_main(char debug) {
     if (softuart_kbhit()) {
         char c = softuart_getchar();
         check_for_coordinates(c);
-		serial_print(c);
     }
     if (gps_string_received) {
-		serial_print_line("Sending GPS");
         gps_string_received = 0;
         gps_ind = 0;
         create_gps_coordinates();
