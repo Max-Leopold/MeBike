@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.ImmutableMap;
 
+import de.hhn.mebike.model.Client;
 import de.hhn.mebike.tour.FlattenedTourEntry;
 import de.hhn.mebike.tour.TourSummary;
 import de.hhn.mebike.util.HaversineAlgorithm;
@@ -21,29 +22,26 @@ import de.hhn.mebike.util.HaversineAlgorithm;
 public class TourSummaryService {
 
     private static final String SELECT_TOURS =
-            "SELECT t.id                          as tourId,\n" +
-                    "       tp.pitch                      as pitch,\n" +
-                    "       tp.pulse                      as pulse,\n" +
-                    "       tp.speed                      as speed,\n" +
-                    "       tp.temperature                as temperature,\n" +
-                    "       tp.gps_point_latitude_degree  as latitude,\n" +
-                    "       tp.gps_point_longitude_degree as longitude,\n" +
-                    "       tp.timestamp                  as time\n" +
+            "SELECT t.id                as tourId,\n" +
+                    "       tp.pitch            as pitch,\n" +
+                    "       tp.pulse            as pulse,\n" +
+                    "       tp.speed            as speed,\n" +
+                    "       tp.temperature      as temperature,\n" +
+                    "       tp.latitude_degree  as latitude,\n" +
+                    "       tp.longitude_degree as longitude,\n" +
+                    "       tp.timestamp        as time\n" +
                     "FROM tour as t,\n" +
-                    "     tour_tour_points as ttp,\n" +
-                    "     tour_point as tp,\n" +
-                    "     client_tours as ct\n" +
-                    "WHERE ct.client_client_id = (:client_id)\n" +
-                    "  AND t.id = ct.tours_id\n" +
-                    "  AND t.id = ttp.tour_id\n" +
-                    "  AND ttp.tour_points_tour_point_id = tp.tour_point_id\n" +
+                    "     tour_point as tp\n" +
+                    "WHERE t.client_client_id = :client_id\n" +
+                    "  AND t.id = tp.tour_id\n" +
                     "GROUP BY t.id,\n" +
                     "         tp.pitch,\n" +
                     "         tp.pulse,\n" +
                     "         tp.speed,\n" +
                     "         tp.temperature,\n" +
-                    "         tp.gps_point_latitude_degree,\n" +
-                    "         tp.gps_point_longitude_degree";
+                    "         tp.latitude_degree,\n" +
+                    "         tp.longitude_degree,\n" +
+                    "         tp.timestamp\n";
 
     private static final String TOUR_ID = "tourId";
     private static final String PITCH = "pitch";
@@ -63,11 +61,11 @@ public class TourSummaryService {
         this.npjt = npjt;
     }
 
-    public List<TourSummary> getTourSummaries(long clientId) {
+    public List<TourSummary> getTourSummaries(Client client) {
         List<FlattenedTourEntry> flattenedTourEntries = npjt.query(
                 SELECT_TOURS,
                 ImmutableMap.of(
-                        "client_id", clientId
+                        "client_id", client.getClientId()
                 ),
                 new TourSummaryRowMapper()
         );

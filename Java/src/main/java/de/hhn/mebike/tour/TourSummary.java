@@ -40,4 +40,14 @@ public class TourSummary {
     public void setTime(int time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "TourSummary{" +
+                "tourId=" + tourId +
+                ", distance=" + distance +
+                ", pulseMedium=" + pulseMedium +
+                ", time=" + time +
+                '}';
+    }
 }

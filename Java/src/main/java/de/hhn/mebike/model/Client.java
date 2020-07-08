@@ -1,15 +1,8 @@
 package de.hhn.mebike.model;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import org.springframework.lang.NonNull;
 
 @Entity
 public class Client {
@@ -18,13 +11,6 @@ public class Client {
     @GeneratedValue
     private long clientId;
 
-    @NonNull
-    @Column(unique = true)
-    private String name;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Tour> tours;
-
     public Client() {
     }
 
@@ -32,24 +18,8 @@ public class Client {
         return clientId;
     }
 
-    public void setClientId(long userId) {
-        this.clientId = userId;
-    }
-
-    public List<Tour> getTours() {
-        return tours;
-    }
-
-    public void setTours(List<Tour> tours) {
-        this.tours = tours;
-    }
-
-    @NonNull
-    public String getName() {
-        return name;
-    }
-
-    public void setName(@NonNull String name) {
-        this.name = name;
+    public Client setClientId(long clientId) {
+        this.clientId = clientId;
+        return this;
     }
 }
