@@ -10,6 +10,7 @@
 #endif
 
 #include "bno055_main.h"
+#include "../bluetooth/bluetooth.h"
 #include "../uart/serial.h"
 #include "../i2cmaster/i2cmaster.h"
 #include "../util/util.h"
@@ -21,7 +22,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <avr/interrupt.h>
 
 #define DEVICE_ADDRESS (0x28 << 1)
 
