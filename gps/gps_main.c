@@ -7,6 +7,7 @@
 #include "../uart/serial.h"
 #include "../bluetooth/bluetooth.h"
 #include <string.h>
+#include <avr/interrupt.h>
 
 char gps_buf[100];
 char gps_ind;
@@ -27,10 +28,6 @@ void gps_init() {
 void gps_main(char debug) {
     debugMode = debug;
 
-    if (softuart_kbhit()) {
-        char c = softuart_getchar();
-        check_for_coordinates(c);
-    }
     if (gps_string_received) {
         gps_string_received = 0;
         gps_ind = 0;
@@ -81,4 +78,11 @@ void create_gps_coordinates() {
         }
         ptr = strtok(NULL, delimiter);
     }
+}
+
+ISR(USART_RX_vect)
+{
+    unsigned char b;
+    b=UDR0;
+    check_for_coordinates(b);
 }

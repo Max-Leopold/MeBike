@@ -32,7 +32,7 @@ void pulsesensor_init() {
 
 
 void pulsesensor_main() {
-    char bpmValue[3];
+    char bpmValue[4];
     sprintf(bpmValue, "%d", getBpm());
 	//convertIntToString(getBpm(), 3, bpmValue);
 
