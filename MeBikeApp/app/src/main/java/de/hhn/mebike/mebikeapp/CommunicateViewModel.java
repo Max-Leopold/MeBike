@@ -1,6 +1,7 @@
 package de.hhn.mebike.mebikeapp;
 
 import android.app.Application;
+import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +16,16 @@ import com.harrysoft.androidbluetoothserial.SimpleBluetoothDeviceInterface;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -183,19 +194,63 @@ public class CommunicateViewModel extends AndroidViewModel {
     }
 
     // Helper method to create toast messages.
-    private void toast(@StringRes int messageResource) { Toast.makeText(getApplication(), messageResource, Toast.LENGTH_LONG).show(); }
+    private void toast(@StringRes int messageResource) {
+        Toast.makeText(getApplication(), messageResource, Toast.LENGTH_LONG).show();
+    }
 
     // Getter method for the activity to use.
-    public LiveData<String> getMessages() { return messagesData; }
+    public LiveData<String> getMessages() {
+        return messagesData;
+    }
 
     // Getter method for the activity to use.
-    public LiveData<ConnectionStatus> getConnectionStatus() { return connectionStatusData; }
+    public LiveData<ConnectionStatus> getConnectionStatus() {
+        return connectionStatusData;
+    }
 
     // Getter method for the activity to use.
-    public LiveData<String> getDeviceName() { return deviceNameData; }
+    public LiveData<String> getDeviceName() {
+        return deviceNameData;
+    }
 
     // Getter method for the activity to use.
-    public LiveData<String> getMessage() { return messageData; }
+    public LiveData<String> getMessage() {
+        return messageData;
+    }
+
+    public void login() {
+        String url = Resources.getSystem().getString(R.string.server_url);
+        try {
+            URL urlObj = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Accept-Charset", "UTF-8");
+
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
+
+            conn.connect();
+            DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+            wr.writeBytes("");
+            wr.flush();
+            wr.close();
+
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            Log.d("test", "result from server: " + result.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     // An enum that is passed to the activity to indicate the current connection status
     enum ConnectionStatus {
@@ -203,4 +258,5 @@ public class CommunicateViewModel extends AndroidViewModel {
         CONNECTING,
         CONNECTED
     }
+
 }

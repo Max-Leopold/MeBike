@@ -26,4 +26,9 @@
     <string name="gps_label">GPS</string>
     <string name="calorie_label">Calories</string>
     <string name="trip_time_label">Trip duration</string>
+    <string name="login_button">Login</string>
+
+    <string name="server_url">0.0.0.0.0:8080</string>
+
+
 </resources>
