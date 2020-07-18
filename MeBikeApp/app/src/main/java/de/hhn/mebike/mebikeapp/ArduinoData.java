@@ -2,6 +2,8 @@ package de.hhn.mebike.mebikeapp;
 
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.Calendar;
+
 public class ArduinoData extends MutableLiveData {
 
     private int rotationsPerMinute = 0;
@@ -13,6 +15,8 @@ public class ArduinoData extends MutableLiveData {
     private  String gmtTime;
     private  float latitude = 0;
     private float longitude = 0;
+    private double speed = 0;
+    private long lastLocationMillis = 0;
 
     public void parseMesssage(String message){
         message = message.replaceAll("<BOM>", "");
@@ -76,4 +80,19 @@ public class ArduinoData extends MutableLiveData {
     public float getLatitude() {
         return latitude;
     }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public double calcSpeed(){
+        long currentMillis = Calendar.getInstance().getTimeInMillis();
+        if(lastLocationMillis == 0){
+            lastLocationMillis = currentMillis;
+            return 0;
+        }
+        double timePassed = currentMillis - lastLocationMillis;
+
+    }
+
 }

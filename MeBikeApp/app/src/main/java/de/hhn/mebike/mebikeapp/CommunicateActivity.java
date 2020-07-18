@@ -119,9 +119,12 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
     }
 
     private void updateUI(ArduinoData data){
-
+        //    private TextView connectionText, speedText, distanceText, rpmText, pitchText, pulseText, temperatureText, calorieText, tripDurationText, gpsText;
+        pitchText.setText("" + data.getPitch());
         pulseText.setText("" + data.getPulse());
         rpmText.setText(""+ data.getRotationsPerMinute());
+        gpsText.setText(""+ data.getLongitude() + "\n" + data.getLatitude());
+
     }
 
 }

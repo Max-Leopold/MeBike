@@ -18,11 +18,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -219,24 +223,24 @@ public class CommunicateViewModel extends AndroidViewModel {
     }
 
     public void login() {
-        String url = Resources.getSystem().getString(R.string.server_url);
+        String urlString = Resources.getSystem().getString(R.string.server_url);
+        String data = "";
+        OutputStream out = null;
+
         try {
-            URL urlObj = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Accept-Charset", "UTF-8");
+            URL url = new URL(urlString);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            out = new BufferedOutputStream(urlConnection.getOutputStream());
 
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+            writer.write(data);
+            writer.flush();
+            writer.close();
+            out.close();
 
-            conn.connect();
-            DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-            wr.writeBytes("");
-            wr.flush();
-            wr.close();
+            urlConnection.connect();
 
-            InputStream in = new BufferedInputStream(conn.getInputStream());
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             StringBuilder result = new StringBuilder();
             String line;
