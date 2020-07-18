@@ -1,10 +1,9 @@
 package de.hhn.mebike.mebikeapp;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import de.hhn.mebike.mebikeapp.util.Haversine;
 
@@ -32,8 +31,8 @@ public class ArduinoData extends MutableLiveData {
         switch (splitMessage[0]) {
             case "gps":
                 gmtTime = splitMessage[1];
-                latitude = Double.parseDouble(splitMessage[2]) / 100f;
-                longitude = Double.parseDouble(splitMessage[3]) / 100f;
+                latitude = Double.parseDouble(splitMessage[2]);
+                longitude = Double.parseDouble(splitMessage[2]);
                 speed = calcSpeed();
                 break;
             case "temp":
@@ -44,8 +43,6 @@ public class ArduinoData extends MutableLiveData {
                 break;
             case "gyro":
                 pitch  = Integer.parseInt(splitMessage[1]);
-                // Added offset for bike: -18
-                pitch -= 18;
                 accelerationForeward = Float.parseFloat(splitMessage[2])/100f;
                 accelerationSideways = Float.parseFloat(splitMessage[3])/100f;
                 break;
@@ -99,19 +96,20 @@ public class ArduinoData extends MutableLiveData {
         return speed;
     }
 
-    public double calcSpeed(){
+    public double calcSpeed() {
         long currentMillis = Calendar.getInstance().getTimeInMillis();
-        if(lastLocationMillis == 0 || lastLatitude == 0){
+        if (lastLocationMillis == 0 || lastLatitude == 0) {
             lastLocationMillis = currentMillis;
             lastLatitude = latitude;
             lastLongitude = longitude;
             return 0;
         }
-        double timePassed = (currentMillis - lastLocationMillis)/36000000f;
-        double distanceInKm = Haversine.HaversineInKM(lastLatitude, lastLongitude, latitude, longitude);
-        tripDistance += distanceInKm;
+        long secondsPassed = TimeUnit.MILLISECONDS.toSeconds(currentMillis - lastLocationMillis);
+        //double timePassed = (currentMillis - lastLocationMillis)/3600000f;
+        double distanceInM = Haversine.HaversineInM(lastLatitude, lastLongitude, latitude, longitude);
+        tripDistance += distanceInM;
         lastLongitude = longitude;
         lastLatitude = latitude;
-        return distanceInKm/timePassed;
+        return (distanceInM / secondsPassed) * 3.6;
     }
 }
