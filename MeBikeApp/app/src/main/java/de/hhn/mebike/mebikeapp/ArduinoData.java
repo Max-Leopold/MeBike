@@ -31,8 +31,8 @@ public class ArduinoData extends MutableLiveData {
         switch (splitMessage[0]) {
             case "gps":
                 gmtTime = splitMessage[1];
-                latitude = Double.parseDouble(splitMessage[2]);
-                longitude = Double.parseDouble(splitMessage[2]);
+                latitude = Double.parseDouble(splitMessage[2])/100f;
+                longitude = Double.parseDouble(splitMessage[3])/100f;
                 speed = calcSpeed();
                 break;
             case "temp":
@@ -104,12 +104,14 @@ public class ArduinoData extends MutableLiveData {
             lastLongitude = longitude;
             return 0;
         }
-        long secondsPassed = TimeUnit.MILLISECONDS.toSeconds(currentMillis - lastLocationMillis);
+        float deltaTime = (currentMillis - lastLocationMillis) / 1000f;
+        //long secondsPassed = TimeUnit.MILLISECONDS.toSeconds(currentMillis - lastLocationMillis);
         //double timePassed = (currentMillis - lastLocationMillis)/3600000f;
         double distanceInM = Haversine.HaversineInM(lastLatitude, lastLongitude, latitude, longitude);
         tripDistance += distanceInM;
         lastLongitude = longitude;
         lastLatitude = latitude;
-        return (distanceInM / secondsPassed) * 3.6;
+        lastLocationMillis = currentMillis;
+        return (distanceInM / deltaTime) * 3.6;
     }
 }

@@ -40,6 +40,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -301,7 +302,7 @@ public class CommunicateViewModel extends AndroidViewModel {
 
     public String getTourDuration() {
         long tourDurationMillis = Calendar.getInstance().getTimeInMillis() - tourStartDate;
-        return new Timestamp(tourDurationMillis).toString();
+        return new SimpleDateFormat("HH:mm:ss").format(new Timestamp(tourDurationMillis));
     }
 
 
