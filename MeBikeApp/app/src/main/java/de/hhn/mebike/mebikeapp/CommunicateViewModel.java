@@ -230,7 +230,14 @@ public class CommunicateViewModel extends AndroidViewModel {
         try {
             URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
             out = new BufferedOutputStream(urlConnection.getOutputStream());
+
+            urlConnection.setConnectTimeout(3000);
+            urlConnection.setReadTimeout(3000);
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.connect();
 
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
             writer.write(data);
@@ -238,7 +245,6 @@ public class CommunicateViewModel extends AndroidViewModel {
             writer.close();
             out.close();
 
-            urlConnection.connect();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
