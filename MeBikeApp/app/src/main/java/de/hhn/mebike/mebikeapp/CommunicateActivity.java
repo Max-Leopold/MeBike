@@ -12,6 +12,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import org.json.JSONObject;
+
+import de.hhn.mebike.mebikeapp.util.NetworkManager;
+import de.hhn.mebike.mebikeapp.util.NetworkResponse;
+
 public class CommunicateActivity extends AppCompatActivity implements DataChangedListener {
 
     private TextView connectionText, speedText, distanceText, rpmText, pitchText, pulseText, temperatureText, calorieText, tripDurationText, gpsText;
@@ -56,7 +61,17 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
         }
 
         loginButton.findViewById(R.id.loginBtn);
-        loginButton.setOnClickListener(v -> viewModel.login(clientId.getText()));
+        loginButton.setOnClickListener(v -> NetworkManager.getInstance().post(null, "/client", new NetworkResponse() {
+            @Override
+            public void onSuccess(JSONObject result) {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        }));
 
         // Setup our Views
         connectionText = findViewById(R.id.communicate_connection_text);
