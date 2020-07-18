@@ -222,39 +222,6 @@ public class CommunicateViewModel extends AndroidViewModel {
         return messageData;
     }
 
-    public void login() {
-        String urlString = Resources.getSystem().getString(R.string.server_url);
-        String data = "";
-        OutputStream out = null;
-
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            out = new BufferedOutputStream(urlConnection.getOutputStream());
-
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-            writer.write(data);
-            writer.flush();
-            writer.close();
-            out.close();
-
-            urlConnection.connect();
-
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            StringBuilder result = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
-            }
-            Log.d("test", "result from server: " + result.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
 
     // An enum that is passed to the activity to indicate the current connection status
     enum ConnectionStatus {
