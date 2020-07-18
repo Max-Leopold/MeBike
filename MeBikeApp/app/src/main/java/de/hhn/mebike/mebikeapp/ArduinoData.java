@@ -1,5 +1,7 @@
 package de.hhn.mebike.mebikeapp;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.Calendar;
@@ -30,8 +32,8 @@ public class ArduinoData extends MutableLiveData {
         switch (splitMessage[0]) {
             case "gps":
                 gmtTime = splitMessage[1];
-                latitude = Double.parseDouble(splitMessage[2]);
-                longitude = Double.parseDouble(splitMessage[2]);
+                latitude = Double.parseDouble(splitMessage[2]) / 100f;
+                longitude = Double.parseDouble(splitMessage[3]) / 100f;
                 speed = calcSpeed();
                 break;
             case "temp":
@@ -42,6 +44,8 @@ public class ArduinoData extends MutableLiveData {
                 break;
             case "gyro":
                 pitch  = Integer.parseInt(splitMessage[1]);
+                // Added offset for bike: -18
+                pitch -= 18;
                 accelerationForeward = Float.parseFloat(splitMessage[2])/100f;
                 accelerationSideways = Float.parseFloat(splitMessage[3])/100f;
                 break;
@@ -103,7 +107,7 @@ public class ArduinoData extends MutableLiveData {
             lastLongitude = longitude;
             return 0;
         }
-        double timePassed = (currentMillis - lastLocationMillis)/3600000f;
+        double timePassed = (currentMillis - lastLocationMillis)/36000000f;
         double distanceInKm = Haversine.HaversineInKM(lastLatitude, lastLongitude, latitude, longitude);
         tripDistance += distanceInKm;
         lastLongitude = longitude;

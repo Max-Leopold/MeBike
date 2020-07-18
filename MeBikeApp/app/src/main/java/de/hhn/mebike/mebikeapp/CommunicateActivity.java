@@ -14,6 +14,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
 
+import java.time.Instant;
+import java.util.Calendar;
+
 import de.hhn.mebike.mebikeapp.util.NetworkManager;
 import de.hhn.mebike.mebikeapp.util.NetworkResponse;
 
@@ -23,7 +26,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
             temperatureText, calorieText, tripDurationText, gpsText, tourID;
     private EditText clientId;
     private Button connectButton, loginButton, startTourButton;
-
+    private long lastSentMillis = 0;
 
 
 
@@ -133,17 +136,72 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
     private void updateUI(ArduinoData data){
         //    private TextView connectionText, speedText, distanceText, rpmText, pitchText, pulseText, temperatureText, calorieText, tripDurationText, gpsText;
         temperatureText.setText(""+data.getTemperature());
-        speedText.setText(""+data.getSpeed());
+        speedText.setText(""+Math.round( data.getSpeed()*100f)/100f);
         pitchText.setText("" + data.getPitch());
         pulseText.setText("" + data.getPulse());
         rpmText.setText(""+ data.getRotationsPerMinute());
-        gpsText.setText(""+ data.getLongitude() + "\n" + data.getLatitude());
-        distanceText.setText(""+data.getTripDistance());
+        gpsText.setText(""+ data.getLongitude() + "\n" +data.getLatitude());
+        distanceText.setText(""+Math.round(data.getTripDistance()*100f)/100f);
         pitchText.setText(""+data.getPitch()+"\n"+data.getAccelerationForeward()+"\n"+data.getAccelerationSideways());
         tripDurationText.setText(viewModel.getTourDuration());
 
-        JSONObject data = new JSONObject();
-        
+        if((lastSentMillis+1000) <= Calendar.getInstance().getTimeInMillis() ){
+            lastSentMillis = Calendar.getInstance().getTimeInMillis();
+
+            JSONObject tourPointData = new JSONObject();
+            JSONObject tourObject = new JSONObject();
+
+            try {
+                tourObject.put("id", tourID.getText().toString());
+                tourPointData.put("tour", tourObject);
+                tourPointData.put("pulse", data.getPulse());
+                tourPointData.put("pitch", data.getPitch());
+                tourPointData.put("speed", data.getSpeed());
+                tourPointData.put("temperature", data.getTemperature());
+                tourPointData.put("timestamp", Calendar.getInstance().getTimeInMillis());
+                tourPointData.put("rpm", data.getRotationsPerMinute());
+                tourPointData.put("forwardAccel", data.getAccelerationForeward());
+                tourPointData.put("sideAccel", data.getAccelerationSideways());
+                tourPointData.put("longitudeDegree", data.getLongitude());
+                tourPointData.put("latitudeDegree", data.getLatitude());
+                NetworkManager.getInstance().post(tourPointData, "/tourPoint", new NetworkResponse() {
+                    @Override
+                    public void onSuccess(JSONObject result) {
+                        Log.d("Success", "Data successufully sent");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("Error", "Failed to send data to server", e);
+                    }
+                });
+            }catch (Exception e){
+                Log.e("JSON FAIL", "Failed to prepare json body", e);
+            }
+        }
+
     }
+
+    /**
+     *  {
+     *         "tourPointId": 3,
+     *         "pulse": 2,
+     *         "tour": {
+     *             "id": 2,
+     *             "client": {
+     *                 "clientId": 1
+     *             }
+     *         },
+     *         "pitch": 2,
+     *         "speed": 2,
+     *         "temperature": 2,
+     *         "timestamp": 2,
+     *         "rpm": 2,
+     *         "forwardAccel": 2,
+     *         "sideAccel": 2,
+     *         "longitudeDegree": 2,
+     *         "latitudeDegree": 2
+     *     }
+     */
 
 }
