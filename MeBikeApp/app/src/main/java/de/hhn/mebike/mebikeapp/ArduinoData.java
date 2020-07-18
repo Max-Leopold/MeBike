@@ -1,9 +1,9 @@
 package de.hhn.mebike.mebikeapp;
 
-import androidx.lifecycle.MutableLiveData;
-
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
+import androidx.lifecycle.MutableLiveData;
 import de.hhn.mebike.mebikeapp.util.Haversine;
 
 public class ArduinoData extends MutableLiveData {
@@ -95,19 +95,20 @@ public class ArduinoData extends MutableLiveData {
         return speed;
     }
 
-    public double calcSpeed(){
+    public double calcSpeed() {
         long currentMillis = Calendar.getInstance().getTimeInMillis();
-        if(lastLocationMillis == 0 || lastLatitude == 0){
+        if (lastLocationMillis == 0 || lastLatitude == 0) {
             lastLocationMillis = currentMillis;
             lastLatitude = latitude;
             lastLongitude = longitude;
             return 0;
         }
-        double timePassed = (currentMillis - lastLocationMillis)/3600000f;
-        double distanceInKm = Haversine.HaversineInKM(lastLatitude, lastLongitude, latitude, longitude);
-        tripDistance += distanceInKm;
+        long secondsPassed = TimeUnit.MILLISECONDS.toSeconds(currentMillis - lastLocationMillis);
+        //double timePassed = (currentMillis - lastLocationMillis)/3600000f;
+        double distanceInM = Haversine.HaversineInM(lastLatitude, lastLongitude, latitude, longitude);
+        tripDistance += distanceInM;
         lastLongitude = longitude;
         lastLatitude = latitude;
-        return distanceInKm/timePassed;
+        return (distanceInM / secondsPassed) * 3.6;
     }
 }

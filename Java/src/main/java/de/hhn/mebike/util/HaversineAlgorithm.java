@@ -20,4 +20,8 @@ public class HaversineAlgorithm {
         return d;
     }
 
+    public static void main(String[] args) {
+        System.out.println(HaversineInM(48.953361, 9.261806, 48.953873, 9.263197));
+    }
+
 }
