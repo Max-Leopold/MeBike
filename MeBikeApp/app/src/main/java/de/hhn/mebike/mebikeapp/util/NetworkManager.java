@@ -29,7 +29,7 @@ public class NetworkManager {
 
     public void get(final String uri, final NetworkResponse response){
         new Thread(() -> {
-            String urlString = Resources.getSystem().getString(R.string.server_url);
+            String urlString ="http://207.180.247.98:8080" + uri;
             HttpURLConnection urlConnection = null;
             JSONObject result = null;
             Exception exception = null;
@@ -51,12 +51,12 @@ public class NetworkManager {
                 else
                     response.onError(exception);
             }
-        });
+        }).start();
     }
 
     public void post(final JSONObject body, final String uri, final NetworkResponse response) {
         new Thread(() -> {
-            String urlString = Resources.getSystem().getString(R.string.server_url);
+            String urlString = "http://207.180.247.98:8080" + uri;
             HttpURLConnection urlConnection = null;
             JSONObject result = null;
             Exception exception = null;
@@ -79,10 +79,12 @@ public class NetworkManager {
                 else
                     response.onError(exception);
             }
-        });
+        }).start();
     }
 
     private void sendJsonParams(HttpURLConnection connection, JSONObject params) throws IOException{
+        if(params == null)
+            return;
         DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(connection.getOutputStream()));
         outStream.writeBytes(params.toString());
         outStream.flush();

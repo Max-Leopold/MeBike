@@ -27,9 +27,7 @@
     <string name="calorie_label">Calories</string>
     <string name="trip_time_label">Trip duration</string>
     <string name="login_button">Login</string>
-
     <string name="server_url">207.180.247.98:8080</string>
-    <string name="clientID">enter client ID ...</string>
 
 
 </resources>

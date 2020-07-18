@@ -2,8 +2,15 @@ package de.hhn.mebike.mebikeapp;
 
 import android.app.Application;
 import android.content.res.Resources;
+import android.os.Debug;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
@@ -16,6 +23,8 @@ import com.harrysoft.androidbluetoothserial.SimpleBluetoothDeviceInterface;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -30,7 +39,12 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
+import de.hhn.mebike.mebikeapp.util.NetworkManager;
+import de.hhn.mebike.mebikeapp.util.NetworkResponse;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -71,6 +85,8 @@ public class CommunicateViewModel extends AndroidViewModel {
 
     private ArduinoData arduinoData = new ArduinoData();
     private DataChangedListener dataChangedListener;
+    private long tourStartDate = 0;
+    private boolean connectedToServer = false;
 
     public void setDataChangedListener(DataChangedListener dataChangedListener) {
         this.dataChangedListener = dataChangedListener;
@@ -220,6 +236,72 @@ public class CommunicateViewModel extends AndroidViewModel {
     // Getter method for the activity to use.
     public LiveData<String> getMessage() {
         return messageData;
+    }
+
+    public void login(EditText clientId) {
+        Log.d("Login start", clientId.getText().toString());
+        if (clientId.getText().toString().length() < 1) {
+            NetworkManager.getInstance().post(null, "/client", new NetworkResponse() {
+                @Override
+                public void onSuccess(JSONObject result) {
+                    try {
+                        clientId.setText("" + result.getLong("clientId"));
+                        clientId.setInputType(InputType.TYPE_NULL);
+                        connectedToServer = true;
+                    } catch (JSONException e) {
+                        Log.e("JSON Parse failed", "Error", e);
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("login", "Login failed", e);
+
+                }
+            });
+        } else {
+            NetworkManager.getInstance().get("/client?clientId=" + clientId.getText().toString(), new NetworkResponse() {
+                @Override
+                public void onSuccess(JSONObject result) {
+                    clientId.setInputType(InputType.TYPE_NULL);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("login", "Login failed", e);
+                }
+            });
+        }
+
+    }
+
+    public void startTour(TextView tourId, String clientID) {
+        if (connectedToServer) {
+            tourStartDate = Calendar.getInstance().getTimeInMillis();
+            NetworkManager.getInstance().post(null, "/tour/start?clientId=" + clientID, new NetworkResponse() {
+                @Override
+                public void onSuccess(JSONObject result) {
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                            try {
+                            tourId.setText("" + result.getLong("id"));
+                            }catch (JSONException e){
+                                Log.e("Start", "Start tour failed", e);
+
+                            }
+                        });
+                }
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
+        }
+
+    }
+
+    public String getTourDuration() {
+        long tourDurationMillis = Calendar.getInstance().getTimeInMillis() - tourStartDate;
+        return new Timestamp(tourDurationMillis).toString();
     }
 
 
