@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.Calendar;
 
+import de.hhn.mebike.mebikeapp.util.Haversine;
+
 public class ArduinoData extends MutableLiveData {
 
     private int rotationsPerMinute = 0;
@@ -13,8 +15,11 @@ public class ArduinoData extends MutableLiveData {
     private float accelerationForeward = 0;
     private float accelerationSideways = 0;
     private  String gmtTime;
-    private  float latitude = 0;
-    private float longitude = 0;
+    private  double latitude = 0;
+    private double longitude = 0;
+    private double lastLatitude = 0;
+    private double lastLongitude = 0;
+    private double tripDistance = 0;
     private double speed = 0;
     private long lastLocationMillis = 0;
 
@@ -25,8 +30,9 @@ public class ArduinoData extends MutableLiveData {
         switch (splitMessage[0]) {
             case "gps":
                 gmtTime = splitMessage[1];
-                latitude = Float.parseFloat(splitMessage[2]);
-                longitude = Float.parseFloat(splitMessage[2]);
+                latitude = Double.parseDouble(splitMessage[2]);
+                longitude = Double.parseDouble(splitMessage[2]);
+                speed = calcSpeed();
                 break;
             case "temp":
                 temperature = Integer.parseInt(splitMessage[1]);
@@ -36,8 +42,8 @@ public class ArduinoData extends MutableLiveData {
                 break;
             case "gyro":
                 pitch  = Integer.parseInt(splitMessage[1]);
-                accelerationForeward = Float.parseFloat(splitMessage[2]);
-                accelerationSideways = Float.parseFloat(splitMessage[3]);
+                accelerationForeward = Float.parseFloat(splitMessage[2])/100f;
+                accelerationSideways = Float.parseFloat(splitMessage[3])/100f;
                 break;
             case "rpm":
                 rotationsPerMinute = Integer.parseInt(splitMessage[1]);
@@ -73,11 +79,15 @@ public class ArduinoData extends MutableLiveData {
         return gmtTime;
     }
 
-    public float getLongitude() {
+    public double getTripDistance() {
+        return tripDistance;
+    }
+
+    public double getLongitude() {
         return longitude;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
@@ -87,12 +97,17 @@ public class ArduinoData extends MutableLiveData {
 
     public double calcSpeed(){
         long currentMillis = Calendar.getInstance().getTimeInMillis();
-        if(lastLocationMillis == 0){
+        if(lastLocationMillis == 0 || lastLatitude == 0){
             lastLocationMillis = currentMillis;
+            lastLatitude = latitude;
+            lastLongitude = longitude;
             return 0;
         }
-        double timePassed = currentMillis - lastLocationMillis;
-
+        double timePassed = (currentMillis - lastLocationMillis)/3600000f;
+        double distanceInKm = Haversine.HaversineInKM(lastLatitude, lastLongitude, latitude, longitude);
+        tripDistance += distanceInKm;
+        lastLongitude = longitude;
+        lastLatitude = latitude;
+        return distanceInKm/timePassed;
     }
-
 }

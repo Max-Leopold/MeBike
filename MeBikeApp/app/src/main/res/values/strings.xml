@@ -19,7 +19,7 @@
     <string name="you_sent">You</string>
     <string name="speed_label">Speed</string>
     <string name="distance_label">Trip Distance</string>
-    <string name="pitch_label">Pitch</string>
+    <string name="pitch_label">Pitch / Acceleration</string>
     <string name="pulse_label">Pulse</string>
     <string name="temperature_label">Temperature</string>
     <string name="rpm_value">RPM</string>
