@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 public class CommunicateActivity extends AppCompatActivity implements DataChangedListener {
 
     private TextView connectionText, speedText, distanceText, rpmText, pitchText, pulseText, temperatureText, calorieText, tripDurationText, gpsText;
+    private EditText clientId;
     private Button connectButton, loginButton;
 
 
@@ -46,6 +47,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
         calorieText = findViewById(R.id.calorieValue);
         tripDurationText = findViewById(R.id.tripDurationValue);
         gpsText = findViewById(R.id.gpsValue);
+        clientId = findViewById(R.id.clientID);
 
         // This method return false if there is an error, so if it does, we should close.
         if (!viewModel.setupViewModel(getIntent().getStringExtra("device_name"), getIntent().getStringExtra("device_mac"))) {
@@ -54,7 +56,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
         }
 
         loginButton.findViewById(R.id.loginBtn);
-        loginButton.setOnClickListener(v -> viewModel.login());
+        loginButton.setOnClickListener(v -> viewModel.login(clientId.getText()));
 
         // Setup our Views
         connectionText = findViewById(R.id.communicate_connection_text);

@@ -222,7 +222,7 @@ public class CommunicateViewModel extends AndroidViewModel {
         return messageData;
     }
 
-    public void login() {
+    public void login(String clientID) {
         String urlString = Resources.getSystem().getString(R.string.server_url);
         String data = "";
         OutputStream out = null;
