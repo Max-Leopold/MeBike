@@ -35,7 +35,6 @@ void init() {
 int main() {
 
     init();
-    serial_print_line("INIT");
 
     while (1) {
         gps_main(debugMode);
