@@ -9,6 +9,4 @@ import de.hhn.mebike.model.Client;
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Client findByClientId(long id);
-
-    Client findByName(String name);
 }

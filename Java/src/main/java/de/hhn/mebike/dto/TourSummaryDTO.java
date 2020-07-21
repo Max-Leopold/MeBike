@@ -19,4 +19,11 @@ public class TourSummaryDTO {
     public void setTourSummaries(List<TourSummary> tourSummaries) {
         this.tourSummaries = tourSummaries;
     }
+
+    @Override
+    public String toString() {
+        return "TourSummaryDTO{" +
+                "tourSummaries=" + tourSummaries +
+                '}';
+    }
 }

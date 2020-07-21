@@ -1,13 +1,11 @@
 package de.hhn.mebike.model;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 
 
 @Entity
@@ -17,8 +15,8 @@ public class Tour implements Serializable {
     @GeneratedValue
     private long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<TourPoint> tourPoints;
+    @ManyToOne
+    private Client client;
 
     public Tour() {
     }
@@ -27,15 +25,25 @@ public class Tour implements Serializable {
         return id;
     }
 
-    public void setId(long id) {
+    public Tour setId(long id) {
         this.id = id;
+        return this;
     }
 
-    public List<TourPoint> getTourPoints() {
-        return tourPoints;
+    public Client getClient() {
+        return client;
     }
 
-    public void setTourPoints(List<TourPoint> tourPoints) {
-        this.tourPoints = tourPoints;
+    public Tour setClient(Client client) {
+        this.client = client;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Tour{" +
+                "id=" + id +
+                ", client=" + client +
+                '}';
     }
 }

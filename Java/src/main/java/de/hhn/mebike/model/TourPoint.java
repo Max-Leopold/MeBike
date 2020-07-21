@@ -2,11 +2,10 @@ package de.hhn.mebike.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class TourPoint implements Serializable {
@@ -17,8 +16,8 @@ public class TourPoint implements Serializable {
 
     private float pulse;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private GPSPoint gpsPoint;
+    @ManyToOne
+    private Tour tour;
 
     private float pitch;
 
@@ -28,6 +27,16 @@ public class TourPoint implements Serializable {
 
     private long timestamp;
 
+    private int rpm;
+
+    private float forwardAccel;
+
+    private float sideAccel;
+
+    private float longitudeDegree;
+
+    private float latitudeDegree;
+
     public TourPoint() {
     }
 
@@ -35,55 +44,107 @@ public class TourPoint implements Serializable {
         return tourPointId;
     }
 
-    public void setTourPointId(long tourPointId) {
+    public TourPoint setTourPointId(long tourPointId) {
         this.tourPointId = tourPointId;
+        return this;
     }
 
     public float getPulse() {
         return pulse;
     }
 
-    public void setPulse(float pulse) {
+    public TourPoint setPulse(float pulse) {
         this.pulse = pulse;
+        return this;
     }
 
-    public GPSPoint getGpsPoint() {
-        return gpsPoint;
+    public Tour getTour() {
+        return tour;
     }
 
-    public void setGpsPoint(GPSPoint gpsPoint) {
-        this.gpsPoint = gpsPoint;
+    public TourPoint setTour(Tour tour) {
+        this.tour = tour;
+        return this;
     }
 
     public float getPitch() {
         return pitch;
     }
 
-    public void setPitch(float pitch) {
+    public TourPoint setPitch(float pitch) {
         this.pitch = pitch;
+        return this;
     }
 
     public float getSpeed() {
         return speed;
     }
 
-    public void setSpeed(float speed) {
+    public TourPoint setSpeed(float speed) {
         this.speed = speed;
+        return this;
     }
 
     public float getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(float temperature) {
+    public TourPoint setTemperature(float temperature) {
         this.temperature = temperature;
+        return this;
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public TourPoint setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+        return this;
+    }
+
+    public int getRpm() {
+        return rpm;
+    }
+
+    public TourPoint setRpm(int rpm) {
+        this.rpm = rpm;
+        return this;
+    }
+
+    public float getForwardAccel() {
+        return forwardAccel;
+    }
+
+    public TourPoint setForwardAccel(float forwardAccel) {
+        this.forwardAccel = forwardAccel;
+        return this;
+    }
+
+    public float getSideAccel() {
+        return sideAccel;
+    }
+
+    public TourPoint setSideAccel(float sideAccel) {
+        this.sideAccel = sideAccel;
+        return this;
+    }
+
+    public float getLongitudeDegree() {
+        return longitudeDegree;
+    }
+
+    public TourPoint setLongitudeDegree(float longitudeDegree) {
+        this.longitudeDegree = longitudeDegree;
+        return this;
+    }
+
+    public float getLatitudeDegree() {
+        return latitudeDegree;
+    }
+
+    public TourPoint setLatitudeDegree(float latitudeDegree) {
+        this.latitudeDegree = latitudeDegree;
+        return this;
     }
 }
