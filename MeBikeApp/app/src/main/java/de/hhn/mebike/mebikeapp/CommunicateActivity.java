@@ -29,6 +29,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
 
 
     private CommunicateViewModel viewModel;
+    private long tourId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +53,12 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
         pitchText = findViewById(R.id.pitchValue);
         temperatureText = findViewById(R.id.temperatureValue);
         calorieText = findViewById(R.id.calorieValue);
-        tripDurationText = findViewById(R.id.tripDurationValue);
+        tripDurationText = findViewById(R.id.tripTimeValue);
         gpsText = findViewById(R.id.gpsValue);
         clientId = findViewById(R.id.clientID);
 
         // This method return false if there is an error, so if it does, we should close.
-        if (!viewModel.setupViewModel(getIntent().getStringExtra("device_name"), getIntent().getStringExtra("device_mac"))) {
+        if (!viewModel.setupViewModel(getIntent().getStringExtra("device_name"), getIntent().getStringExtra("device_mac"), this)) {
             finish();
             return;
         }
@@ -76,6 +77,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
                     } else {
                         Intent intent = new Intent(getApplicationContext(), TourOverview.class);
                         intent.putExtra("clientId", clientId.getText().toString());
+                        intent.putExtra("tourId", tourId);
                         startActivity(intent);
                     }
                 }
@@ -140,6 +142,10 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
     @Override
     public void update(ArduinoData data) {
         updateUI(data);
+    }
+
+    public void setTourId(long tourId) {
+        this.tourId = tourId;
     }
 
     private void updateUI(ArduinoData data) {

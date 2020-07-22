@@ -88,6 +88,7 @@ public class CommunicateViewModel extends AndroidViewModel {
     private DataChangedListener dataChangedListener;
     private long tourStartDate = 0;
     private boolean connectedToServer = false;
+    private CommunicateActivity communicateActivity;
 
     public void setDataChangedListener(DataChangedListener dataChangedListener) {
         this.dataChangedListener = dataChangedListener;
@@ -100,7 +101,8 @@ public class CommunicateViewModel extends AndroidViewModel {
 
     // Called in the activity's onCreate(). Checks if it has been called before, and if not, sets up the data.
     // Returns true if everything went okay, or false if there was an error and therefore the activity should finish.
-    public boolean setupViewModel(String deviceName, String mac) {
+    public boolean setupViewModel(String deviceName, String mac, CommunicateActivity communicateActivity) {
+        this.communicateActivity = communicateActivity;
         // Check we haven't already been called
         if (!viewModelSetup) {
             viewModelSetup = true;
@@ -282,7 +284,13 @@ public class CommunicateViewModel extends AndroidViewModel {
             NetworkManager.getInstance().post(null, "/tour/start?clientId=" + clientID, new NetworkResponse() {
                 @Override
                 public void onSuccess(JSONObject result) {
+                    try {
+                        communicateActivity.setTourId(result.getLong("id"));
+                    } catch (JSONException e) {
+                        Log.e("Start", "Start tour failed", e);
+                    }
                 }
+
                 @Override
                 public void onError(Exception e) {
 

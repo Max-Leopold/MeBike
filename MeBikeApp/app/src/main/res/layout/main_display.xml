@@ -221,7 +221,7 @@
         app:layout_constraintTop_toBottomOf="@+id/gpsValue" />
 
     <TextView
-        android:id="@+id/tripDurationValue"
+        android:id="@+id/tripTimeValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
