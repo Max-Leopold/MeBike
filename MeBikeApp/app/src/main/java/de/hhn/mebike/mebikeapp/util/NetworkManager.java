@@ -36,7 +36,7 @@ public class NetworkManager {
             boolean success = false;
             try {
                 URL url = new URL(urlString);
-                urlConnection = connect(url, Method.POST);
+                urlConnection = connect(url, Method.GET);
                 result = readResultJson(urlConnection);
                 Log.d("GET RESULT:", "Received: " + result);
                 success = true;

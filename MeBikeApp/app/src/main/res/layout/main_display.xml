@@ -78,7 +78,7 @@
         app:layout_constraintTop_toTopOf="@+id/distanceLabel" />
 
     <TextView
-        android:id="@+id/distanceOverviewValue"
+        android:id="@+id/distanceValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -109,10 +109,10 @@
         android:text="@string/pulse_label"
         app:layout_constraintEnd_toEndOf="@+id/distanceLabel"
         app:layout_constraintStart_toStartOf="@+id/distanceLabel"
-        app:layout_constraintTop_toBottomOf="@+id/distanceValue" />
+        app:layout_constraintTop_toBottomOf="@+id/pitchValue" />
 
     <TextView
-        android:id="@+id/avrgPulseValue"
+        android:id="@+id/pulseValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -152,7 +152,7 @@
         android:text="@string/rpm_value"
         app:layout_constraintEnd_toEndOf="@+id/pulseLabel"
         app:layout_constraintStart_toStartOf="@+id/pulseLabel"
-        app:layout_constraintTop_toBottomOf="@+id/pulseValue" />
+        app:layout_constraintTop_toBottomOf="@+id/temperatureValue" />
 
     <TextView
         android:id="@+id/rpmValue"
@@ -174,7 +174,7 @@
         android:text="@string/gps_label"
         app:layout_constraintEnd_toEndOf="@+id/temperatureLabel"
         app:layout_constraintStart_toStartOf="@+id/temperatureLabel"
-        app:layout_constraintTop_toBottomOf="@+id/pulseValue" />
+        app:layout_constraintTop_toBottomOf="@+id/temperatureValue" />
 
     <TextView
         android:id="@+id/gpsValue"
