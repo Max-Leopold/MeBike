@@ -23,6 +23,8 @@ public class ArduinoData extends MutableLiveData {
     private double tripDistance = 0;
     private double speed = 0;
     private long lastLocationMillis = 0;
+    private float score = 0;
+
 
     public void parseMesssage(String message){
         message = message.replaceAll("<BOM>", "");
@@ -48,8 +50,13 @@ public class ArduinoData extends MutableLiveData {
                 break;
             case "rpm":
                 rotationsPerMinute = Integer.parseInt(splitMessage[1]);
+                score += rotationsPerMinute*pulse;
                 break;
         };
+    }
+
+    public float getScore() {
+        return score;
     }
 
     public int getRotationsPerMinute() {

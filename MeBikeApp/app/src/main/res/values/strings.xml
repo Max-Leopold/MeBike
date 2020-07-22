@@ -22,12 +22,20 @@
     <string name="pitch_label">Pitch / Acceleration</string>
     <string name="pulse_label">Pulse</string>
     <string name="temperature_label">Temperature</string>
-    <string name="rpm_value">RPM</string>
+    <string name="rpm_value">Tretgeschwindigkeit</string>
     <string name="gps_label">GPS</string>
-    <string name="calorie_label">Calories</string>
+    <string name="calorie_label">Score</string>
     <string name="trip_time_label">Trip duration</string>
     <string name="login_button">Login</string>
     <string name="server_url">207.180.247.98:8080</string>
+    <string name="startBtn">Start</string>
+    <string name="stopBtn">Stop</string>
+    <string name="title_activity_tour_overview">TourOverview</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 
 
 </resources>

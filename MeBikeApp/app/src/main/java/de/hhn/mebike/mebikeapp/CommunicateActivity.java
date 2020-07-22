@@ -1,10 +1,9 @@
 package de.hhn.mebike.mebikeapp;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
 
-import java.time.Instant;
 import java.util.Calendar;
 
 import de.hhn.mebike.mebikeapp.util.NetworkManager;
@@ -27,7 +25,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
     private EditText clientId;
     private Button connectButton, loginButton, startTourButton;
     private long lastSentMillis = 0;
-
+    private boolean tourStarted = false;
 
 
     private CommunicateViewModel viewModel;
@@ -57,7 +55,6 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
         tripDurationText = findViewById(R.id.tripDurationValue);
         gpsText = findViewById(R.id.gpsValue);
         clientId = findViewById(R.id.clientID);
-        tourID = findViewById(R.id.tourId);
 
         // This method return false if there is an error, so if it does, we should close.
         if (!viewModel.setupViewModel(getIntent().getStringExtra("device_name"), getIntent().getStringExtra("device_mac"))) {
@@ -65,11 +62,24 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
             return;
         }
 
+
         loginButton = findViewById(R.id.loginBtn);
         loginButton.setOnClickListener(v -> viewModel.login(clientId));
 
         startTourButton = findViewById(R.id.startTourBtn);
-        startTourButton.setOnClickListener(v -> viewModel.startTour(tourID, clientId.getText().toString()));
+        startTourButton.setOnClickListener(v -> {
+                    if (!tourStarted) {
+                        viewModel.startTour(clientId.getText().toString());
+                        String updatedBtnTxt = getResources().getString(R.string.stopBtn);
+                        startTourButton.setText(updatedBtnTxt);
+                        tourStarted = true;
+                    } else {
+                        Intent intent = new Intent(getApplicationContext(), TourOverview.class);
+                        intent.putExtra("clientId", clientId.getText().toString());
+                        startActivity(intent);
+                    }
+                }
+        );
 
         // Setup our Views
         connectionText = findViewById(R.id.communicate_connection_text);
@@ -108,8 +118,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
 
     // Called when a button in the action bar is pressed
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // If the back button was pressed, handle it the normal way
@@ -133,19 +142,19 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
         updateUI(data);
     }
 
-    private void updateUI(ArduinoData data){
+    private void updateUI(ArduinoData data) {
         //    private TextView connectionText, speedText, distanceText, rpmText, pitchText, pulseText, temperatureText, calorieText, tripDurationText, gpsText;
-        temperatureText.setText(""+data.getTemperature());
-        speedText.setText(""+Math.round( data.getSpeed()*100f)/100f);
-        pitchText.setText("" + data.getPitch());
-        pulseText.setText("" + data.getPulse());
-        rpmText.setText(""+ data.getRotationsPerMinute());
-        gpsText.setText(""+ data.getLongitude() + "\n" +data.getLatitude());
-        distanceText.setText(""+Math.round(data.getTripDistance()*100f)/100f);
-        pitchText.setText(""+data.getPitch()+"\n"+data.getAccelerationForeward()+"\n"+data.getAccelerationSideways());
+        temperatureText.setText("" + data.getTemperature() + " °C");
+        speedText.setText("" + Math.round(data.getSpeed() * 100f) / 100f + " km/h");
+        pulseText.setText("" + data.getPulse()+" b/m");
+        rpmText.setText("" + data.getRotationsPerMinute()+" r/m");
+        gpsText.setText("" + data.getLongitude()+"°" + "\n" + data.getLatitude()+"°");
+        distanceText.setText("" + Math.round(data.getTripDistance() * 100f) / 100f + " m");
+        pitchText.setText("Pitch: " + data.getPitch() + "°\n Frw Acc: " + data.getAccelerationForeward() + " G\nSd Acc: " + data.getAccelerationSideways()+ " G");
         tripDurationText.setText(viewModel.getTourDuration());
+        calorieText.setText(""+data.getScore());
 
-        if((lastSentMillis+1000) <= Calendar.getInstance().getTimeInMillis() ){
+        if ((lastSentMillis + 1000) <= Calendar.getInstance().getTimeInMillis()) {
             lastSentMillis = Calendar.getInstance().getTimeInMillis();
 
             JSONObject tourPointData = new JSONObject();
@@ -175,7 +184,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
                         Log.e("Error", "Failed to send data to server", e);
                     }
                 });
-            }catch (Exception e){
+            } catch (Exception e) {
                 Log.e("JSON FAIL", "Failed to prepare json body", e);
             }
         }

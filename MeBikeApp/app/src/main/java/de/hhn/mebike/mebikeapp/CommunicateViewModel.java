@@ -276,20 +276,12 @@ public class CommunicateViewModel extends AndroidViewModel {
 
     }
 
-    public void startTour(TextView tourId, String clientID) {
+    public void startTour(String clientID) {
         if (connectedToServer) {
             tourStartDate = Calendar.getInstance().getTimeInMillis();
             NetworkManager.getInstance().post(null, "/tour/start?clientId=" + clientID, new NetworkResponse() {
                 @Override
                 public void onSuccess(JSONObject result) {
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                            try {
-                            tourId.setText("" + result.getLong("id"));
-                            }catch (JSONException e){
-                                Log.e("Start", "Start tour failed", e);
-
-                            }
-                        });
                 }
                 @Override
                 public void onError(Exception e) {

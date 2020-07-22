@@ -36,7 +36,7 @@
         android:id="@+id/speedLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:text="@string/speed_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,6 +48,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textSize="26sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/speedLabel" />
@@ -79,8 +81,10 @@
         android:id="@+id/distanceValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/distanceLabel"
         app:layout_constraintStart_toStartOf="@+id/distanceLabel"
         app:layout_constraintTop_toBottomOf="@+id/distanceLabel" />
@@ -89,8 +93,10 @@
         android:id="@+id/pitchValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/pitchLabel"
         app:layout_constraintStart_toStartOf="@+id/pitchLabel"
         app:layout_constraintTop_toBottomOf="@+id/pitchLabel" />
@@ -111,6 +117,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/pulseLabel"
         app:layout_constraintStart_toStartOf="@+id/pulseLabel"
         app:layout_constraintTop_toBottomOf="@+id/pulseLabel" />
@@ -130,6 +138,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/temperatureLabel"
         app:layout_constraintStart_toStartOf="@+id/temperatureLabel"
         app:layout_constraintTop_toBottomOf="@+id/temperatureLabel" />
@@ -150,6 +160,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/rpmLabel"
         app:layout_constraintStart_toStartOf="@+id/rpmLabel"
         app:layout_constraintTop_toBottomOf="@+id/rpmLabel" />
@@ -170,6 +182,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/gpsLbabel"
         app:layout_constraintStart_toStartOf="@+id/gpsLbabel"
         app:layout_constraintTop_toBottomOf="@+id/gpsLbabel" />
@@ -190,6 +204,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/calorieLabel"
         app:layout_constraintStart_toStartOf="@+id/calorieLabel"
         app:layout_constraintTop_toBottomOf="@+id/calorieLabel" />
@@ -210,14 +226,16 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/tripTime"
         app:layout_constraintStart_toStartOf="@+id/tripTime"
         app:layout_constraintTop_toBottomOf="@+id/tripTime" />
 
     <EditText
         android:id="@+id/clientID"
-        android:layout_width="101dp"
-        android:layout_height="40dp"
+        android:layout_width="88dp"
+        android:layout_height="39dp"
         android:layout_marginStart="24dp"
         android:ems="10"
         android:inputType="textPersonName"
@@ -249,18 +267,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Start"
+        android:text="@string/startBtn"
         app:layout_constraintBottom_toTopOf="@+id/loginBtn"
         app:layout_constraintEnd_toEndOf="@+id/loginBtn" />
-
-    <TextView
-        android:id="@+id/tourId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/startTourBtn"
-        app:layout_constraintEnd_toStartOf="@+id/startTourBtn"
-        app:layout_constraintTop_toTopOf="@+id/startTourBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
