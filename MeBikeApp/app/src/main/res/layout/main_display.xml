@@ -78,7 +78,7 @@
         app:layout_constraintTop_toTopOf="@+id/distanceLabel" />
 
     <TextView
-        android:id="@+id/distanceValue"
+        android:id="@+id/distanceOverviewValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -112,7 +112,7 @@
         app:layout_constraintTop_toBottomOf="@+id/distanceValue" />
 
     <TextView
-        android:id="@+id/pulseValue"
+        android:id="@+id/avrgPulseValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

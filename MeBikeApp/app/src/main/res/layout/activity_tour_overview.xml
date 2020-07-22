@@ -18,10 +18,10 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
-        android:id="@+id/pulseValue"
+        android:id="@+id/avrgPulseValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="tripDuration"
+        android:text="pulse"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView6"
@@ -73,7 +73,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
-        android:id="@+id/distanceValue"
+        android:id="@+id/distanceOverviewValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="avrgPulse"

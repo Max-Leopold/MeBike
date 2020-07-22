@@ -21,6 +21,8 @@ public class TourOverview extends AppCompatActivity {
     private long tourId;
     private TourSummaryData summaryData;
 
+    private TextView title, time, avrgPulse, distance, avrgSpeed, avrgRpm, maxPitch;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +34,22 @@ public class TourOverview extends AppCompatActivity {
 
 
         String clientIdString = getIntent().getStringExtra("clientId");
-        String tourId = getIntent().getStringExtra("tourId");
-        if(clientIdString == null || clientIdString.length() < 1 || tourId == null || tourId.length() < 1){
+        tourId = getIntent().getLongExtra("tourId", 0);
+        if(clientIdString == null || clientIdString.length() < 1 || tourId < 1){
             finish();
             return;
         }
-        clientId = Integer.parseInt(clientIdString);
-        this.tourId = Long.parseLong(tourId);
-        clientIdTextView.setText(""+clientId);
+
+
+        TextView title = findViewById(R.id.tourOverview);
+        title.setText("Tour overview (tourId: "+tourId+")");
+
+         time = findViewById(R.id.timeValue);
+         avrgPulse = findViewById(R.id.avrgPulseValue);
+         distance = findViewById(R.id.distanceOverviewValue);
+         avrgSpeed = findViewById(R.id.averageSpeedValue);
+         avrgRpm = findViewById(R.id.averageRpmValue);
+         maxPitch = findViewById(R.id.maxPitchValue);
 
         init();
     }
@@ -57,8 +67,12 @@ public class TourOverview extends AppCompatActivity {
                             break;  // Break out of loop
                         }
                     }
-                    // TODO Set all the labels here
-
+                    time.setText(""+summaryData.time);
+                    avrgPulse.setText(""+summaryData.pulse);
+                    distance.setText(""+summaryData.distance);
+                    avrgSpeed.setText(""+summaryData.speed);
+                    avrgRpm.setText(""+summaryData.rpm);
+                    maxPitch.setText(""+summaryData.maxPitch);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
