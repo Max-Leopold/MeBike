@@ -10,8 +10,9 @@ public class FlattenedTourEntry {
     private float latitude;
     private float longitude;
     private long timestamp;
+    private int rpm;
 
-    public FlattenedTourEntry(long tourId, float pitch, float pulse, float speed, float temperature, float latitude, float longitude, long timestamp) {
+    public FlattenedTourEntry(long tourId, float pitch, float pulse, float speed, float temperature, float latitude, float longitude, long timestamp, int rpm) {
         this.tourId = tourId;
         this.pitch = pitch;
         this.pulse = pulse;
@@ -20,69 +21,87 @@ public class FlattenedTourEntry {
         this.latitude = latitude;
         this.longitude = longitude;
         this.timestamp = timestamp;
+        this.rpm = rpm;
     }
 
     public long getTourId() {
         return tourId;
     }
 
-    public void setTourId(long tourId) {
+    public FlattenedTourEntry setTourId(long tourId) {
         this.tourId = tourId;
+        return this;
     }
 
     public float getPitch() {
         return pitch;
     }
 
-    public void setPitch(float pitch) {
+    public FlattenedTourEntry setPitch(float pitch) {
         this.pitch = pitch;
+        return this;
     }
 
     public float getPulse() {
         return pulse;
     }
 
-    public void setPulse(float pulse) {
+    public FlattenedTourEntry setPulse(float pulse) {
         this.pulse = pulse;
+        return this;
     }
 
     public float getSpeed() {
         return speed;
     }
 
-    public void setSpeed(float speed) {
+    public FlattenedTourEntry setSpeed(float speed) {
         this.speed = speed;
+        return this;
     }
 
     public float getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(float temperature) {
+    public FlattenedTourEntry setTemperature(float temperature) {
         this.temperature = temperature;
+        return this;
     }
 
     public float getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public FlattenedTourEntry setLatitude(float latitude) {
         this.latitude = latitude;
+        return this;
     }
 
     public float getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public FlattenedTourEntry setLongitude(float longitude) {
         this.longitude = longitude;
+        return this;
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public FlattenedTourEntry setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+        return this;
+    }
+
+    public int getRpm() {
+        return rpm;
+    }
+
+    public FlattenedTourEntry setRpm(int rpm) {
+        this.rpm = rpm;
+        return this;
     }
 }

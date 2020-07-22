@@ -29,7 +29,8 @@ public class TourSummaryService {
                     "       tp.temperature      as temperature,\n" +
                     "       tp.latitude_degree  as latitude,\n" +
                     "       tp.longitude_degree as longitude,\n" +
-                    "       tp.timestamp        as time\n" +
+                    "       tp.timestamp        as time,\n" +
+                    "       tp.rpm              as rmp\n" +
                     "FROM tour as t,\n" +
                     "     tour_point as tp\n" +
                     "WHERE t.client_client_id = :client_id\n" +
@@ -41,7 +42,8 @@ public class TourSummaryService {
                     "         tp.temperature,\n" +
                     "         tp.latitude_degree,\n" +
                     "         tp.longitude_degree,\n" +
-                    "         tp.timestamp\n";
+                    "         tp.timestamp,\n" +
+                    "         tp.rpm\n";
 
     private static final String TOUR_ID = "tourId";
     private static final String PITCH = "pitch";
@@ -51,6 +53,7 @@ public class TourSummaryService {
     private static final String LATITUDE = "latitude";
     private static final String LONGITUDE = "longitude";
     private static final String TIMESTAMP = "time";
+    private static final String RPM = "rpm";
 
     private final NamedParameterJdbcTemplate npjt;
 
@@ -105,11 +108,16 @@ public class TourSummaryService {
                     tourSummary.setTime(0);
                     tourSummary.setPulseMedium(flattenedTourEntry.getPulse());
                     tourSummary.setTourId(flattenedTourEntry.getTourId());
+                    tourSummary.setMaxPitch(0);
+                    tourSummary.setRpmMedium(0);
+                    tourSummary.setSpeedMedium(0);
                 } else {
                     FlattenedTourEntry lastTourEntry = flattenedTourEntries2d.get(i).get(j - 1);
                     FlattenedTourEntry flattenedTourEntry = flattenedTourEntries2d.get(i).get(j);
 
                     tourSummary.setPulseMedium((tourSummary.getPulseMedium() * j + flattenedTourEntry.getPulse()) / j + 1);
+                    tourSummary.setRpmMedium((tourSummary.getRpmMedium() * j + flattenedTourEntry.getRpm()) / j + 1);
+                    tourSummary.setSpeedMedium((tourSummary.getSpeedMedium() * j + flattenedTourEntry.getSpeed()) / j + 1);
                     tourSummary.setDistance(
                             tourSummary.getDistance() +
                                     HaversineAlgorithm.HaversineInM(
@@ -119,6 +127,8 @@ public class TourSummaryService {
                                             lastTourEntry.getLongitude()
                                     ));
                     tourSummary.setTime((int) (tourSummary.getTime() + (flattenedTourEntry.getTimestamp() - lastTourEntry.getTimestamp())));
+                    tourSummary.setMaxPitch(Math.max(tourSummary.getMaxPitch(), flattenedTourEntry.getPitch()));
+
                 }
             }
 
@@ -140,7 +150,8 @@ public class TourSummaryService {
                     resultSet.getFloat(TEMPERATURE),
                     resultSet.getFloat(LATITUDE),
                     resultSet.getFloat(LONGITUDE),
-                    resultSet.getLong(TIMESTAMP));
+                    resultSet.getLong(TIMESTAMP),
+                    resultSet.getInt(RPM));
         }
     }
 
