@@ -43,6 +43,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import de.hhn.mebike.mebikeapp.util.NetworkManager;
 import de.hhn.mebike.mebikeapp.util.NetworkResponse;
@@ -301,8 +302,8 @@ public class CommunicateViewModel extends AndroidViewModel {
     }
 
     public String getTourDuration() {
-        long tourDurationMillis = Calendar.getInstance().getTimeInMillis() - tourStartDate;
-        return new SimpleDateFormat("HH:mm:ss").format(new Timestamp(tourDurationMillis));
+        long tourDurationMillis = Calendar.getInstance().getTimeInMillis() - tourStartDate - (1000 * 60 * 60);
+        return new SimpleDateFormat("HH:mm:ss", Locale.GERMANY).format(new Timestamp(tourDurationMillis));
     }
 
 

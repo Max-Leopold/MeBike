@@ -13,6 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import de.hhn.mebike.mebikeapp.util.NetworkManager;
 import de.hhn.mebike.mebikeapp.util.NetworkResponse;
 
@@ -74,10 +78,11 @@ public class TourOverview extends AppCompatActivity {
                         return;
                     }
                     new Handler(Looper.getMainLooper()).post(() -> {
-                        time.setText("" + summaryData.time);
-                        avrgPulse.setText("" + summaryData.pulse);
-                        distance.setText("" + summaryData.distance);
-                        avrgSpeed.setText("" + summaryData.speed);
+                        time.setText(new SimpleDateFormat("HH:mm:ss", Locale.GERMANY).format(new Timestamp(summaryData.time)));
+                        //time.setText("" + summaryData.time);
+                        avrgPulse.setText("" + Math.round(summaryData.pulse * 100f) / 100f);
+                        distance.setText("" + Math.round(summaryData.distance * 100f) / 100f);
+                        avrgSpeed.setText("" + Math.round(summaryData.speed * 100f) / 100f);
                         avrgRpm.setText("" + summaryData.rpm);
                         maxPitch.setText("" + summaryData.maxPitch);
                     });

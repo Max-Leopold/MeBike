@@ -21,7 +21,7 @@ import de.hhn.mebike.mebikeapp.util.NetworkResponse;
 public class CommunicateActivity extends AppCompatActivity implements DataChangedListener {
 
     private TextView connectionText, speedText, distanceText, rpmText, pitchText, pulseText,
-            temperatureText, calorieText, tripDurationText, gpsText, tourID;
+            temperatureText, calorieText, tripDurationText, gpsText;
     private EditText clientId;
     private Button connectButton, loginButton, startTourButton;
     private long lastSentMillis = 0;
@@ -154,10 +154,19 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
         speedText.setText("" + Math.round(data.getSpeed() * 100f) / 100f + " km/h");
         pulseText.setText("" + data.getPulse()+" b/m");
         rpmText.setText("" + data.getRotationsPerMinute()+" r/m");
-        gpsText.setText("" + data.getLongitude()+"°" + "\n" + data.getLatitude()+"°");
+        String longitudeText = "" + data.getLongitude();
+        String latitudeText = "" + data.getLatitude();
+        if(longitudeText.length() > 8){
+            longitudeText = longitudeText.substring(0, 8);
+        }
+        if(latitudeText.length() > 8){
+            latitudeText = latitudeText.substring(0, 8);
+        }
+        gpsText.setText(longitudeText +"°" + "\n" + latitudeText+"°");
         distanceText.setText("" + Math.round(data.getTripDistance() * 100f) / 100f + " m");
         pitchText.setText("Pitch: " + data.getPitch() + "°\n Frw Acc: " + data.getAccelerationForeward() + " G\nSd Acc: " + data.getAccelerationSideways()+ " G");
-        tripDurationText.setText(viewModel.getTourDuration());
+        if(tourStarted)
+            tripDurationText.setText(viewModel.getTourDuration());
         calorieText.setText(""+data.getScore());
 
         if ((lastSentMillis + 1000) <= Calendar.getInstance().getTimeInMillis()) {
@@ -167,7 +176,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
             JSONObject tourObject = new JSONObject();
 
             try {
-                tourObject.put("id", tourID.getText().toString());
+                tourObject.put("id", tourId);
                 tourPointData.put("tour", tourObject);
                 tourPointData.put("pulse", data.getPulse());
                 tourPointData.put("pitch", data.getPitch());
@@ -179,6 +188,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
                 tourPointData.put("sideAccel", data.getAccelerationSideways());
                 tourPointData.put("longitudeDegree", data.getLongitude());
                 tourPointData.put("latitudeDegree", data.getLatitude());
+                Log.d("TourPoint SENDING:", tourPointData.toString());
                 NetworkManager.getInstance().post(tourPointData, "/tourPoint", new NetworkResponse() {
                     @Override
                     public void onSuccess(JSONObject result) {

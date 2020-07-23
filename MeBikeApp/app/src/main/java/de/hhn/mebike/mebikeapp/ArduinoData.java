@@ -1,5 +1,7 @@
 package de.hhn.mebike.mebikeapp;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.Calendar;
@@ -33,9 +35,13 @@ public class ArduinoData extends MutableLiveData {
         switch (splitMessage[0]) {
             case "gps":
                 gmtTime = splitMessage[1];
-                latitude = Double.parseDouble(splitMessage[2])/100f;
-                longitude = Double.parseDouble(splitMessage[3])/100f;
-                speed = calcSpeed();
+                try {
+                    latitude = Double.parseDouble(splitMessage[2]) / 100f;
+                    longitude = Double.parseDouble(splitMessage[3]) / 100f;
+                    speed = calcSpeed();
+                }catch (Exception e){
+                    Log.e("Failed to parse data", "Parse failed", e);
+                }
                 break;
             case "temp":
                 temperature = Integer.parseInt(splitMessage[1]);
@@ -44,7 +50,7 @@ public class ArduinoData extends MutableLiveData {
                 pulse = Integer.parseInt(splitMessage[1]);
                 break;
             case "gyro":
-                pitch  = Integer.parseInt(splitMessage[1]);
+                pitch  = Integer.parseInt(splitMessage[1]) - 24;
                 accelerationForeward = Float.parseFloat(splitMessage[2])/100f;
                 accelerationSideways = Float.parseFloat(splitMessage[3])/100f;
                 break;
@@ -104,6 +110,12 @@ public class ArduinoData extends MutableLiveData {
     }
 
     public double calcSpeed() {
+        if(lastLatitude == 0 || lastLongitude == 0){
+            lastLatitude = latitude;
+            lastLongitude = longitude;
+            tripDistance = 0;
+            return 0;
+        }
         long currentMillis = Calendar.getInstance().getTimeInMillis();
         if (lastLocationMillis == 0 || lastLatitude == 0) {
             lastLocationMillis = currentMillis;
