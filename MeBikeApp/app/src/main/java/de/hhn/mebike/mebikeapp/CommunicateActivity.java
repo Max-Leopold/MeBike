@@ -71,10 +71,11 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
         startTourButton.setOnClickListener(v -> {
                     if (!tourStarted) {
                         viewModel.startTour(clientId.getText().toString());
-                        String updatedBtnTxt = getResources().getString(R.string.stopBtn);
-                        startTourButton.setText(updatedBtnTxt);
+                        startTourButton.setText(R.string.stopBtn);
                         tourStarted = true;
                     } else {
+                        tourStarted = false;
+                        startTourButton.setText(R.string.startBtn);
                         Intent intent = new Intent(getApplicationContext(), TourOverview.class);
                         intent.putExtra("clientId", clientId.getText().toString());
                         intent.putExtra("tourId", tourId);
@@ -169,7 +170,7 @@ public class CommunicateActivity extends AppCompatActivity implements DataChange
             tripDurationText.setText(viewModel.getTourDuration());
         calorieText.setText(""+data.getScore());
 
-        if ((lastSentMillis + 1000) <= Calendar.getInstance().getTimeInMillis()) {
+        if ((lastSentMillis + 1000) <= Calendar.getInstance().getTimeInMillis() && tourStarted) {
             lastSentMillis = Calendar.getInstance().getTimeInMillis();
 
             JSONObject tourPointData = new JSONObject();

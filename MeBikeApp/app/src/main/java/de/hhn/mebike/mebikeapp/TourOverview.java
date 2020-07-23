@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import de.hhn.mebike.mebikeapp.util.NetworkManager;
@@ -42,6 +43,7 @@ public class TourOverview extends AppCompatActivity {
         String clientIdString = getIntent().getStringExtra("clientId");
         tourId = getIntent().getLongExtra("tourId", 0);
         if (clientIdString == null || clientIdString.length() < 1 || tourId < 1) {
+            Log.e("Finishing", "FInishing");
             finish();
             return;
         }
@@ -68,17 +70,22 @@ public class TourOverview extends AppCompatActivity {
                 try {
                     JSONArray summaries = result.getJSONArray("tourSummaries");
                     for (int i = 0; i < summaries.length(); i++) {
-                        if (summaries.getJSONObject(i).getLong("tourId") == TourOverview.this.tourId) {
+                        if (summaries.getJSONObject(i).getLong("tourId") == 108) {
                             summaryData = new TourSummaryData(summaries.getJSONObject(i));
                             break;  // Break out of loop
                         }
                     }
                     if(summaryData == null){
+                        Log.e("Finishing 2", "FInishing 2");
                         finish();
                         return;
                     }
                     new Handler(Looper.getMainLooper()).post(() -> {
-                        time.setText(new SimpleDateFormat("HH:mm:ss", Locale.GERMANY).format(new Timestamp(summaryData.time)));
+                        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(summaryData.time);
+                        time.setText(formatter.format(calendar.getTime()));
+
                         //time.setText("" + summaryData.time);
                         avrgPulse.setText("" + Math.round(summaryData.pulse * 100f) / 100f);
                         distance.setText("" + Math.round(summaryData.distance * 100f) / 100f);

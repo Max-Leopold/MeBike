@@ -264,7 +264,9 @@ public class CommunicateViewModel extends AndroidViewModel {
                 }
             });
         } else {
-            NetworkManager.getInstance().get("/client?clientId=" + clientId.getText().toString(), new NetworkResponse() {
+            connectedToServer = true;
+            /*
+            NetworkManager.getInstance().get("/client?id=" + clientId.getText().toString(), new NetworkResponse() {
                 @Override
                 public void onSuccess(JSONObject result) {
                     clientId.setInputType(InputType.TYPE_NULL);
@@ -275,6 +277,7 @@ public class CommunicateViewModel extends AndroidViewModel {
                     Log.e("login", "Login failed", e);
                 }
             });
+            */
         }
 
     }
@@ -294,7 +297,7 @@ public class CommunicateViewModel extends AndroidViewModel {
 
                 @Override
                 public void onError(Exception e) {
-
+                    Log.e("Failed to start", "Failed to start tour", e);
                 }
             });
         }
