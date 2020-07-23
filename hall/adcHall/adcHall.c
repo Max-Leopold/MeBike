@@ -1,8 +1,13 @@
 /*
- * adcHall.c
- *
- * Created: 22.06.2020 22:23:08
- *  Author: Wanja
+ adcHall.c
+ 
+ Created: 22.06.2020 22:23:08
+ Author: Wanja
+ 
+ ported from cpp library from Uros Petrevski (see here: https://github.com/nodesign/MCP3008/blob/master/MCP3008.cpp)
+ which is ported from Python code originaly written by Adafruit learning system for rPI :
+ http://learn.adafruit.com/send-raspberry-pi-data-to-cosm/python-script
+ 
  */ 
 
 #include <avr/io.h>
