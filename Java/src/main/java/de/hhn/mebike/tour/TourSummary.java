@@ -81,6 +81,9 @@ public class TourSummary {
                 ", distance=" + distance +
                 ", pulseMedium=" + pulseMedium +
                 ", time=" + time +
+                ", speedMedium=" + speedMedium +
+                ", rpmMedium=" + rpmMedium +
+                ", maxPitch=" + maxPitch +
                 '}';
     }
 }

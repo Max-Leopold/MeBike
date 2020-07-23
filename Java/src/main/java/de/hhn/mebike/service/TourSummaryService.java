@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -30,7 +32,7 @@ public class TourSummaryService {
                     "       tp.latitude_degree  as latitude,\n" +
                     "       tp.longitude_degree as longitude,\n" +
                     "       tp.timestamp        as time,\n" +
-                    "       tp.rpm              as rmp\n" +
+                    "       tp.rpm              as rpm\n" +
                     "FROM tour as t,\n" +
                     "     tour_point as tp\n" +
                     "WHERE t.client_client_id = :client_id\n" +
@@ -43,7 +45,8 @@ public class TourSummaryService {
                     "         tp.latitude_degree,\n" +
                     "         tp.longitude_degree,\n" +
                     "         tp.timestamp,\n" +
-                    "         tp.rpm\n";
+                    "         tp.rpm\n" +
+                    "ORDER BY tp.timestamp";
 
     private static final String TOUR_ID = "tourId";
     private static final String PITCH = "pitch";
@@ -56,6 +59,8 @@ public class TourSummaryService {
     private static final String RPM = "rpm";
 
     private final NamedParameterJdbcTemplate npjt;
+
+    private final Logger logger = LoggerFactory.getLogger(TourSummaryService.class);
 
     @Autowired
     public TourSummaryService(
@@ -108,16 +113,18 @@ public class TourSummaryService {
                     tourSummary.setTime(0);
                     tourSummary.setPulseMedium(flattenedTourEntry.getPulse());
                     tourSummary.setTourId(flattenedTourEntry.getTourId());
-                    tourSummary.setMaxPitch(0);
-                    tourSummary.setRpmMedium(0);
-                    tourSummary.setSpeedMedium(0);
+                    tourSummary.setMaxPitch(flattenedTourEntry.getPitch());
+                    tourSummary.setRpmMedium(flattenedTourEntry.getRpm());
+                    tourSummary.setSpeedMedium(flattenedTourEntry.getSpeed());
+
+                    logger.info(tourSummary.toString());
                 } else {
                     FlattenedTourEntry lastTourEntry = flattenedTourEntries2d.get(i).get(j - 1);
                     FlattenedTourEntry flattenedTourEntry = flattenedTourEntries2d.get(i).get(j);
 
-                    tourSummary.setPulseMedium((tourSummary.getPulseMedium() * j + flattenedTourEntry.getPulse()) / j + 1);
-                    tourSummary.setRpmMedium((tourSummary.getRpmMedium() * j + flattenedTourEntry.getRpm()) / j + 1);
-                    tourSummary.setSpeedMedium((tourSummary.getSpeedMedium() * j + flattenedTourEntry.getSpeed()) / j + 1);
+                    tourSummary.setPulseMedium(tourSummary.getPulseMedium() + flattenedTourEntry.getPulse());
+                    tourSummary.setRpmMedium(tourSummary.getRpmMedium() + flattenedTourEntry.getRpm());
+                    tourSummary.setSpeedMedium(tourSummary.getSpeedMedium() + flattenedTourEntry.getSpeed());
                     tourSummary.setDistance(
                             tourSummary.getDistance() +
                                     HaversineAlgorithm.HaversineInM(
@@ -131,6 +138,9 @@ public class TourSummaryService {
 
                 }
             }
+            tourSummary.setPulseMedium(tourSummary.getPulseMedium() / flattenedTourEntries2d.get(i).size());
+            tourSummary.setRpmMedium(tourSummary.getRpmMedium() / flattenedTourEntries2d.get(i).size());
+            tourSummary.setSpeedMedium(tourSummary.getSpeedMedium() / flattenedTourEntries2d.get(i).size());
 
             tourSummaries.add(tourSummary);
         }
