@@ -62,6 +62,8 @@ Debug/
 # IntelliJ Idea
 *.iml
 /.idea
+*.idea
+*/target
 
 # Maven
 /target
