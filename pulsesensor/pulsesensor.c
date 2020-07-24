@@ -13,6 +13,7 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 
+
 int valueLength = 8;        /* Defines the length of the bpmValues-Array instead of using "array.length"-method.
                              Is used in the loops, so it´s not hardcoded and can be changed easily. */
 int bpmValues[8];           //Array with a length of 8 to store the bpm values in it
@@ -44,6 +45,7 @@ void pulsesensor_main() {
     ---> if yes: the value gets added to the bpmValues-Array via the addValue-method
     ---> if the sensor doesn't recognize a signal within 7 seconds the output will be 0 */
 
+<<<<<<< HEAD
     int elapsedMillis = getMillis() - startMillis;      /*To calculate the elapsed time between the current time
                                                          * (getMillis) and the the measured time (startMillis) */
     if (elapsedMillis >= waitTime){                     /* Query if the elapsed time is greater than or equal to the
