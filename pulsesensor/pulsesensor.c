@@ -5,7 +5,6 @@
  */
 
 #include "../uart/serial.h"
-#include "../util/util.h"
 #include "../adc/adc.h"
 #include "../util/Interrupt/timer.h"
 #include "pulsesensor.h"

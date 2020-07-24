@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "../uart/serial.h"
-#include "../util/util.h"
 #include "../util/Interrupt/timer.h"
 #include "../bluetooth/bluetooth.h"
 

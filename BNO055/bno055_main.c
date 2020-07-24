@@ -13,7 +13,6 @@
 #include "../bluetooth/bluetooth.h"
 #include "../uart/serial.h"
 #include "../i2cmaster/i2cmaster.h"
-#include "../util/util.h"
 #include "../util/Interrupt/timer.h"
 #include <util/delay.h>
 #include <avr/io.h>

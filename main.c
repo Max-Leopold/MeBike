@@ -14,21 +14,22 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-char debugMode = '0';
+char debugMode = '0'; //Indicate if we want to receive debug logs
 
+/*
+ * Call the init method for each sensor and attachements
+ */
 void init() {
-	initMillis();
+    initMillis();
+    serial_init();
+    bluetooth_init();
+    hall_init();
+    gps_init();
+    bno_init();
+    ADC_init();
+    pulsesensor_init();
 
-	// Bluetooth uses the serial class internally, so it does not need to be initialized here
-	serial_init();
-	bluetooth_init();
-	hall_init();
-	gps_init();
-	bno_init();
-	ADC_init();
-	pulsesensor_init();
-
-    sei();
+    sei(); //Enable interrupts
 }
 
 
@@ -36,11 +37,13 @@ int main() {
 
     init();
 
+    /*
+     * Call the main routine for every sensor
+     */
     while (1) {
         gps_main(debugMode);
         hall_main();
-		pulsesensor_main();
-		bno055_main(debugMode);
-
-	}
+        pulsesensor_main();
+        bno055_main(debugMode);
+    }
 }
