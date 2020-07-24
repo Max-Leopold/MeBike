@@ -45,7 +45,7 @@ void pulsesensor_main() {
     ---> if yes: the value gets added to the bpmValues-Array via the addValue-method
     ---> if the sensor doesn't recognize a signal within 7 seconds the output will be 0 */
 
-<<<<<<< HEAD
+
     int elapsedMillis = getMillis() - startMillis;      /*To calculate the elapsed time between the current time
                                                          * (getMillis) and the the measured time (startMillis) */
     if (elapsedMillis >= waitTime){                     /* Query if the elapsed time is greater than or equal to the
