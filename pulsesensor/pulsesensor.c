@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 
-int valueLength = 8;        /* Defines the length of the bpmValues-Array instead of using "array.length"-method.
+int valueLength = 8;        /* Defines the length of the bpmValues-Array
                              Is used in the loops, so it´s not hardcoded and can be changed easily. */
 int bpmValues[8];           //Array with a length of 8 to store the bpm values in it
 int average = 0;            /* Integer to store the average of the read bpm values
@@ -24,15 +24,19 @@ int sum = 0;                /* Integer to store the sum of the bpm´s to calcula
 int bpm = 0;                //Integer to store value of the beats per minute.
 int arrayLength = 0;        //Integer the stores the amount of the bpm values in the array to calculate the average
 int waitTime = 60;          //Integer to store the wait time to realize delay functionality
-unsigned long startMillis;  //Timestamps variable to realize delay functionality. For example is used to calculate the elapsed time
-unsigned long sendStartMillis; //Timestamps variable for delay purposes
-long lastHearbeatdetected;  //To store the time the last heartbeat was detected
+unsigned long startMillis;  /* Timestamps variable to realize delay functionality.
+                             * In this case it is used to calculate the elapsed time and the elapsed time is used to debounce.
+                             * If the elapsed time is greater than or equal to the wait time, then the code continues to execute. */
+unsigned long sendStartMillis; /* Timestamps variable to realize delay functionality.
+                                * In this case it is used for sending the bpm data via bluetooth every second. */
+long lastHearbeatdetected;  /* To store the time the last heartbeat was detected.
+                             * Is used to detected if there is no finger on the sensor. After 7 seconds with no finger the output will set to 0. */
 
 
 //Init method to initialize
 void pulsesensor_init() {
     startMillis = getMillis();      //Set the initial time for the pulse sensor
-	sendStartMillis = getMillis();  //Set the inital time for the bluetooth sensor
+	sendStartMillis = getMillis();  //Set the initial time for the bluetooth sensor
 }
 
 
@@ -46,10 +50,10 @@ void pulsesensor_main() {
     ---> if the sensor doesn't recognize a signal within 7 seconds the output will be 0 */
 
 
-    int elapsedMillis = getMillis() - startMillis;      /*To calculate the elapsed time between the current time
+    int elapsedMillis = getMillis() - startMillis;      /* To calculate the elapsed time between the current time
                                                          * (getMillis) and the the measured time (startMillis) */
     if (elapsedMillis >= waitTime){                     /* Query if the elapsed time is greater than or equal to the
-                                                         * waiting time to get delay functionality */
+                                                         * waiting time to get delay functionality to debounce */
         startMillis = getMillis();
         static int beatMsec = 0;
 
@@ -62,7 +66,7 @@ void pulsesensor_main() {
 
             addValue(bpm);                      //Add the bpm value to the bpmValues-Array
         } else {
-            if (getMillis() - lastHearbeatdetected > 7000) {
+            if (getMillis() - lastHearbeatdetected > 7000) { //If there 7 seconds no finger on the sensor the output will be set to 0
 	            clearBpm();
 	        }
         }
@@ -106,17 +110,19 @@ char heartbeatDetected(int delay, int ADCvalue) {
     }
     return result;
 }
-//Returns the average of the bpm values
+/* Returns the average of the bpm values
+ * The average is the average of the bpm values from the bpmValues-Array */
 int getBpm() {
     return average;
 }
 //Adds bpm value to the bpmValues-Array
 void addValue(int bpm) {
-    //Normalize the values - values under 40 and over 200 will not be saved in the bpmValues-Array
+    /* bpm values under 40 and over 200 will not be saved in the bpmValues-Array to filter out strongly fluctuating values
+     * Is made because of the strongly fluctuating pulse values which occur due to the sensitivity of the sensor */
     if (bpm < 40 || bpm > 200) {
         return;
     }
-    //Increases the position of the values by one
+    //Loop to fill the bpmValues-Array with the given bpm values
     for (int i = valueLength - 1; i > 0; i--) {
         bpmValues[i] = bpmValues[i - 1];
     }
@@ -128,10 +134,10 @@ void addValue(int bpm) {
     for (int i = 0; i < valueLength; i++) {
         sum += bpmValues[i]; //Increases the sum with the values of the array
     }
-    if (arrayLength < valueLength) { //Increases the arrayLength if the arrayLength is lower than the valueLength
+    if (arrayLength < valueLength) { // Is used for calculating the average of the bpmValues-Array
         arrayLength++;
     }
-    average = sum / arrayLength; //To calculate the average
+    average = sum / arrayLength; //Calculate the average
 
 }
 
