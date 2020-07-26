@@ -32,7 +32,7 @@ int get_adc_current(){
 //Interrupt for the ADC
 ISR (ADC_vect)
 {
-    //When a conversion is complete, the measured value is in these two registers (ADCL and ADCH)
+    //When a conversion is complete, the converted value is in these two registers (ADCL and ADCH)
 	int ADCval = ADCL; //Integer to store the value from register ADCL
 	ADCval = (ADCH << 8) + ADCval; //To read the value of the ADCH register plus the value of ADCL
 
