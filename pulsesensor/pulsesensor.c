@@ -12,21 +12,30 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 
-int valueLength = 8;
-int bpmValues[8];
-int average = 0;
-int sum = 0, bpm = 0;
-int arrayLength = 0;
-int waitTime = 60;
-unsigned long startMillis;
-unsigned long sendStartMillis;
-long lastHearbeatdetected;
+
+int valueLength = 8;        /* Defines the length of the bpmValues-Array
+                             Is used in the loops, so it´s not hardcoded and can be changed easily. */
+int bpmValues[8];           //Array with a length of 8 to store the bpm values in it
+int average = 0;            /* Integer to store the average of the read bpm values
+                             * Is used to display the average of the last 8 read bpm values */
+int sum = 0;                /* Integer to store the sum of the bpm´s to calculate the average
+                             * The last 8 bpm values ​​are added up here                                             */
+int bpm = 0;                //Integer to store value of the beats per minute.
+int arrayLength = 0;        //Integer the stores the amount of the bpm values in the array to calculate the average
+int waitTime = 60;          //Integer to store the wait time to realize delay functionality
+unsigned long startMillis;  /* Timestamps variable to realize delay functionality.
+                             * In this case it is used to calculate the elapsed time and the elapsed time is used to debounce.
+                             * If the elapsed time is greater than or equal to the wait time, then the code continues to execute. */
+unsigned long sendStartMillis; /* Timestamps variable to realize delay functionality.
+                                * In this case it is used for sending the bpm data via bluetooth every second. */
+long lastHearbeatdetected;  /* To store the time the last heartbeat was detected.
+                             * Is used to detected if there is no finger on the sensor. After 7 seconds with no finger the output will set to 0. */
 
 
-
+//Init method to initialize
 void pulsesensor_init() {
-    startMillis = getMillis();
-	sendStartMillis = getMillis();
+    startMillis = getMillis();      //Set the initial time for the pulse sensor
+	sendStartMillis = getMillis();  //Set the initial time for the bluetooth sensor
 }
 
 
@@ -36,36 +45,39 @@ void pulsesensor_main() {
 	//convertIntToString(getBpm(), 3, bpmValue);
 
     /* if-statement in which we get the information if a heartbeat is detected or not
-    ---> if yes: the value gets added to the bpmValues-array via the addValue-method
+    ---> if yes: the value gets added to the bpmValues-Array via the addValue-method
     ---> if the sensor doesn't recognize a signal within 7 seconds the output will be 0 */
 
-    int elapsedMillis = getMillis() - startMillis;
-    if (elapsedMillis >= waitTime){
+
+    int elapsedMillis = getMillis() - startMillis;      /* To calculate the elapsed time between the current time
+                                                         * (getMillis) and the the measured time (startMillis) */
+    if (elapsedMillis >= waitTime){                     /* Query if the elapsed time is greater than or equal to the
+                                                         * waiting time to get delay functionality to debounce */
         startMillis = getMillis();
         static int beatMsec = 0;
 
         if (heartbeatDetected(waitTime, get_adc_current())) {
 
-            lastHearbeatdetected = getMillis();
+            lastHearbeatdetected = getMillis(); //Set the last time a heartbeat was detected
             bpm = 60000 / beatMsec;
 
             beatMsec = 0;
 
-            addValue(bpm);
+            addValue(bpm);                      //Add the bpm value to the bpmValues-Array
         } else {
-            if (getMillis() - lastHearbeatdetected > 7000) {
+            if (getMillis() - lastHearbeatdetected > 7000) { //If there 7 seconds no finger on the sensor the output will be set to 0
 	            clearBpm();
 	        }
         }
         beatMsec += waitTime;
     }
-	if(getMillis() - sendStartMillis > 1000){
+	if(getMillis() - sendStartMillis > 1000){ //To send the bpmValue every second
 		sendStartMillis = getMillis();
 		bluetooth_send_pulse(bpmValue);
 	}
 }
 
-//heartbeat-detection method inspired from the datasheet from joy-it
+//Heartbeat-detection method inspired from the datasheet from joy-it
 char heartbeatDetected(int delay, int ADCvalue) {
     static int maxValue = 0;
     static char isPeak = 0;
@@ -97,40 +109,43 @@ char heartbeatDetected(int delay, int ADCvalue) {
     }
     return result;
 }
-
+/* Returns the average of the bpm values
+ * The average is the average of the bpm values from the bpmValues-Array */
 int getBpm() {
     return average;
 }
-
+//Adds bpm value to the bpmValues-Array
 void addValue(int bpm) {
-    //for normalizing purpose
+    /* bpm values under 40 and over 200 will not be saved in the bpmValues-Array to filter out strongly fluctuating values
+     * Is made because of the strongly fluctuating pulse values which occur due to the sensitivity of the sensor */
     if (bpm < 40 || bpm > 200) {
         return;
     }
-    //increases the position of the values by one
+    //Loop to fill the bpmValues-Array with the given bpm values
     for (int i = valueLength - 1; i > 0; i--) {
         bpmValues[i] = bpmValues[i - 1];
     }
-    bpmValues[0] = bpm; //put the latest value to position 0 of the array
+    bpmValues[0] = bpm; //Put the latest value to position 0 of the array
 
     sum = 0;
 
-    //calculates the average of the 10 bpm values in the array
+    //Calculates the average of the 10 bpm values in the array
     for (int i = 0; i < valueLength; i++) {
-        sum += bpmValues[i];
+        sum += bpmValues[i]; //Increases the sum with the values of the array
     }
-    if (arrayLength < valueLength) {
+    if (arrayLength < valueLength) { // Is used for calculating the average of the bpmValues-Array
         arrayLength++;
     }
-    average = sum / arrayLength;
+    average = sum / arrayLength; //Calculate the average
 
 }
 
-//if no finger is on the sensor this method get called and sets all bpmValues to 0 - so if 0 is displayed no finger is on the sensor
+/* If no finger is on the sensor this method get called and sets all bpmValues to 0 - so if 0 is displayed no finger is on the sensor
+   Sensor is very sensitive and sometimes reads values ​​even though there is no finger on it */
 void clearBpm() {
     for (int i = 0; i < valueLength - 1; i++) {
         bpmValues[i] = 0;
     }
-    average = 0;
-    arrayLength = 0;
+    average = 0; //Set average to 0
+    arrayLength = 0; //Set arrayLength to 0
 }
