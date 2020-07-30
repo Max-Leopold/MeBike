@@ -1,3 +1,9 @@
+# Cmake File for building and flashing the Atmega328p.
+# This makes it possible to build the project on every platform that supports cmake, avdude and has a c compile toolchain installed.
+# The directories for these tool can be set in line 45-48.
+# To build the project run "cmake ." from the root directory.
+# To flash the Atmega328p connect it to one of your USB ports and run "make" from the root repository.
+
 CMAKE_MINIMUM_REQUIRED(VERSION 3.16.0)
 SET(CMAKE_SYSTEM_NAME Generic)
 
